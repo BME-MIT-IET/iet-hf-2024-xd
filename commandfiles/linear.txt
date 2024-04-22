@@ -1,0 +1,49 @@
+letrehoz forras f1
+letrehoz cso cs1
+osszekot f1 cs1
+
+letrehoz pumpa p1
+letrehoz cso cs2
+letrehoz cso cs7
+osszekot p1 cs2
+osszekot p1 cs7
+osszekot p1 cs1
+
+letrehoz pumpa p3
+letrehoz cso cs3
+letrehoz cso cs8
+osszekot p3 cs3
+osszekot p3 cs8
+osszekot p3 cs2
+
+letrehoz ciszterna c1
+osszekot c1 cs3
+
+letrehoz forras f2
+letrehoz cso cs4
+osszekot f2 cs4
+
+letrehoz pumpa p2
+letrehoz cso cs5
+osszekot p2 cs5
+osszekot p2 cs4
+osszekot p2 cs7
+
+letrehoz pumpa p4
+letrehoz cso cs6
+osszekot p4 cs6
+osszekot p4 cs5
+osszekot p4 cs8
+
+letrehoz ciszterna c2
+osszekot c2 cs6
+
+letrehoz szerelo sze1
+letrehoz szerelo sze2
+letrehoz szabotor sza1
+letrehoz szabotor sza2
+
+lep sze1 p1
+lep sze2 p2
+lep sza1 p3
+lep sza2 p4
