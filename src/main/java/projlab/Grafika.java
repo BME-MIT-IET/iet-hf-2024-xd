@@ -276,9 +276,16 @@ public class Grafika {
             Color bgcolor = new Color(80, 80, 80);
             frame.setBackground(bgcolor);
         }
+        // Create a JScrollPane and add your main panel to it
+        JScrollPane scrollPane2 = new JScrollPane(panel);
+
+        // Add the JScrollPane to the JFrame instead of the main panel
+        frame.getContentPane().add(scrollPane2);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1000,1000);
-        frame.getContentPane().add(panel);
+        drawPanel.setMinimumSize(new Dimension(1000, 800));
+        input.setMinimumSize(new Dimension(900, 20));
+        output.setMinimumSize(new Dimension(900, 156));
         frame.pack();
         frame.setVisible(true);
     }
