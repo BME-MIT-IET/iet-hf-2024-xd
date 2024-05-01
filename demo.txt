@@ -1,4 +1,0 @@
-sze1 maxHatizsakKapacitas: 0
-sze1 pumpaHatizsak: 
-sze1 csoHatizsak: 
-ParancsErtelmezo letrejott
