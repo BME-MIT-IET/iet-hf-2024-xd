@@ -85,7 +85,7 @@ public class Ciszterna extends Mezo {
 	 */
 	public void Frissit() {
 		ArrayList<Mezo> szomszedok = GetSzomszedok(); // GetLeszedhetoSzomszedok lesz
-		for (var cso : szomszedok) {
+		for (Mezo cso : szomszedok) {
 			try {
 				int menny1 = cso.getVizmennyiseg();
 				cso.VizetCsokkent(1);
