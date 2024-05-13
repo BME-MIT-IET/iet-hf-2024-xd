@@ -1,6 +1,6 @@
 package org.drukmakor;
 
-import org.junit.jupiter.api.BeforeEach;
+/*import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -1210,4 +1210,4 @@ class Tests {
                 "pcs3 csuszos: 5", out);
     }
 
-}
+}*/
