@@ -1,23 +1,14 @@
 package UITests;
 
-import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.drukmakor.Grafika;
 import org.drukmakor.ParancsErtelmezo;
 import org.drukmakor.ParancsErtelmezoView;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.assertj.swing.core.Settings;
-
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class DarkModeTest extends AssertJSwingJUnitTestCase {
