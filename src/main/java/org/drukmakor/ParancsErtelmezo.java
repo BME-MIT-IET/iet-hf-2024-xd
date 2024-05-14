@@ -75,6 +75,7 @@ public class ParancsErtelmezo {
      */
     public void runFromString(String parancs)
     {
+        parancs = parancs.replace(" endl ", "\n");
 
         //Ez a következő néhány sor varázslat azt csinálja, hogy a parancsokat soronként szétválasszuk, és a sorok végéről levágjuk a whitespace karaktereket.
         String[] lines = parancs.trim().split("\\n");
