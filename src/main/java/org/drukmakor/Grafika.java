@@ -32,9 +32,6 @@ public class Grafika extends JFrame {
         pe = _pe;
         p = _p;
         setTitle("Arakis");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1000, 1000);
-        setLayout(new BorderLayout());
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setName("pGridBag");
@@ -171,7 +168,7 @@ public class Grafika extends JFrame {
         cantSee.add(cantSee2, constraints);
 
         pe.setDrawpanel(drawPanel);
-        drawPanel.setPreferredSize(new Dimension(980, 500)); // UNDO HEIGHT TO 740 BEFORE PUSH
+        drawPanel.setPreferredSize(new Dimension(980, 740));
         drawPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         drawPanel.setName("pDrawPanel");
         constraints.gridwidth = 2;
