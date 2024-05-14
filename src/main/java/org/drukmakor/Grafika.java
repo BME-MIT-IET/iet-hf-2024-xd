@@ -168,7 +168,7 @@ public class Grafika extends JFrame {
         cantSee.add(cantSee2, constraints);
 
         pe.setDrawpanel(drawPanel);
-        drawPanel.setPreferredSize(new Dimension(980, 740));
+        drawPanel.setPreferredSize(new Dimension(980, 500));
         drawPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         drawPanel.setName("pDrawPanel");
         constraints.gridwidth = 2;
