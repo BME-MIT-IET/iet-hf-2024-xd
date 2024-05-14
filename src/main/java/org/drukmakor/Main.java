@@ -35,7 +35,6 @@ public class Main {
         //Alapból a parancsértelmező a standard kimenetre írja a kimenetet. Ha azt akarjuk hogy a view kapja meg az output-ot, akkor azt be kell állítani így:
         pe2.OutputToView(true);
         Grafika gr = new Grafika(pev, pe2);
-        gr.draw();
         //Ezután már a view fogja megkapni a kimenetet, és a viewnak kell majd továbbítania a kimenetet a megfelelő TextBox-nak. (Lásd: ParancsErtelmezoView.ReceiveFromPE)
 
 
