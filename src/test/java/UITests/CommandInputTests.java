@@ -140,4 +140,120 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
         assertNull(ObjectView.getViewByName("sza1"));
         assertNull(ObjectView.getViewByName("sze1"));
     }
+
+
+    @Test
+    public void shouldWarnIfInvalidNumberOfParameters() {
+        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
+        JButtonFixture button = window.button("bSend");
+
+        inputField.setText("lep player1");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("A lep parancs 2 paramétert vár. (lep <jatekos> <mezo>)"));
+    }
+
+    @Test
+    public void shouldWarnIfNonExistentPlayer() {
+        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
+        JButtonFixture button = window.button("bSend");
+
+        inputField.setText("lep player1 mezo1");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Nincs ilyen nevű játékos: player1"));
+    }
+
+    @Test
+    public void shouldWarnIfNonExistentMezo() {
+        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
+        JButtonFixture button = window.button("bSend");
+
+        inputField.setText("alwaysdebug");
+        button.click();
+
+        inputField.setText("letrehoz szerelo sz1");
+        button.click();
+
+        inputField.setText("lep sz1 mezo1");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Nincs ilyen nevű mező: mezo1"));
+    }
+
+    @Test
+    public void shouldWarnIfInvalidNumberOfParametersForOsszekot() {
+        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
+        JButtonFixture button = window.button("bSend");
+
+        inputField.setText("alwaysdebug");
+        button.click();
+
+        inputField.setText("osszekot mezo1");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Az osszekot parancs 2 paramétert vár. (osszekot <mezo1> <mezo2>)"));
+    }
+
+    @Test
+    public void shouldWarnIfNonExistentFirstMezo() {
+        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
+        JButtonFixture button = window.button("bSend");
+
+        inputField.setText("alwaysdebug");
+        button.click();
+
+        inputField.setText("osszekot mezo1 mezo2");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Nincs ilyen nevű mező: mezo1"));
+    }
+
+    @Test
+    public void shouldWarnIfNonExistentSecondMezo() {
+        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
+        JButtonFixture button = window.button("bSend");
+
+        inputField.setText("alwaysdebug");
+        button.click();
+
+        inputField.setText("letrehoz forras f1");
+        button.click();
+
+
+        inputField.setText("letrehoz cso cs1");
+        button.click();
+
+        inputField.setText("osszekot cs1 f1");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Nincs ilyen nevű mező: mezo2"));
+    }
+
+    @Test
+    public void shouldConnectTwoExistingMezos() {
+        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
+        JButtonFixture button = window.button("bSend");
+
+        inputField.setText("alwaysdebug");
+        button.click();
+
+        inputField.setText("letrehoz forras f1");
+        button.click();
+
+        inputField.setText("letrehoz ciszterna c1");
+        button.click();
+
+        inputField.setText("letrehoz cso cs1");
+        button.click();
+
+        inputField.setText("osszekot cs1 f1");
+        button.click();
+
+        inputField.setText("osszekot cs1 c1");
+        button.click();
+
+        assertNotNull(ObjectView.getViewByName("cs1"));
+    }
+
 }
