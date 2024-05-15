@@ -16,6 +16,8 @@ import static org.junit.Assert.*;
 
 public class AllitCommandTests extends AssertJSwingJUnitTestCase {
     private FrameFixture window;
+    JButtonFixture button;
+    JTextComponentFixture inputField;
 
     @Override
     protected void onSetUp() {
@@ -25,22 +27,22 @@ public class AllitCommandTests extends AssertJSwingJUnitTestCase {
         ParancsErtelmezoView dummyPEV = new ParancsErtelmezoView();
         ParancsErtelmezo dummyPE = new ParancsErtelmezo(dummyPEV);
 
-        dummyPE.EnableDebugMode(false);
+        dummyPE.EnableDebugMode(true);
         dummyPE.OutputToView(true);
 
         dummyPE.EnableDebugMode(true);
+        dummyPE.runFromString("torol");
 
         Grafika frame = GuiActionRunner.execute(() -> new Grafika(dummyPEV, dummyPE));
 
         window = new FrameFixture(robot(), frame);
         window.show();
+        inputField = window.panel("pGridBag").textBox("tfInput");
+        button = window.button("bSend");
     }
 
     @Test
     public void shouldWarnIfInvalidNumberOfParametersForAllit() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("allit player1 bemenet");
         button.click();
 
@@ -48,11 +50,7 @@ public class AllitCommandTests extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void shouldWarnIfNonExistentPlayerForAllit() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
-        inputField.setText("allit player1 bemenet kimenet");
+    public void shouldWarnIfNonExistentPlayerForAllit() {inputField.setText("allit player1 bemenet kimenet");
         button.click();
 
         assertTrue(window.textBox("jtaOutput").text().contains("Nincs ilyen nevű játékos: player1"));

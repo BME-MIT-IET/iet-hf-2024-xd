@@ -22,6 +22,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandInputTests extends AssertJSwingJUnitTestCase {
     private FrameFixture window;
+    JButtonFixture button;
+    JTextComponentFixture inputField;
 
     @Override
     protected void onSetUp() {
@@ -31,7 +33,8 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
         ParancsErtelmezoView dummyPEV = new ParancsErtelmezoView();
         ParancsErtelmezo dummyPE = new ParancsErtelmezo(dummyPEV);
 
-        dummyPE.EnableDebugMode(false);
+        dummyPE.EnableDebugMode(true);
+        dummyPE.runFromString("torol");
         dummyPE.OutputToView(true);
 
         dummyPE.EnableDebugMode(true);
@@ -40,20 +43,22 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
         window = new FrameFixture(robot(), frame);
         window.show();
+        inputField = window.panel("pGridBag").textBox("tfInput");
+        button = window.button("bSend");
     }
 
     @Test
     public void shouldEnterTextIntoInputField() {
-        window.panel("pGridBag").textBox("tfInput").enterText("Teszt");
+        inputField.enterText("Teszt");
 
-        window.panel("pGridBag").textBox("tfInput").requireText("Teszt");
+        inputField.requireText("Teszt");
     }
 
     @Test
     public void shouldTurnOnDarkMode() {
         // A sötét mód bekapcsolása
-        window.panel("pGridBag").textBox("tfInput").enterText("dark");
-        window.button("bSend").click();
+        inputField.enterText("dark");
+        button.click();
 
         // Fő panel
 
@@ -61,7 +66,7 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
         assertTrue(window.panel("pGridBag").background().target().equals(new Color(150, 150, 150)));
 
-        assertTrue(window.button("bSend").background().target().equals(new Color(100, 100, 100)));
+        assertTrue(button.background().target().equals(new Color(100, 100, 100)));
 
         // Új játék gomb
         assertTrue(window.button("bNewGame").background().target().equals(new Color(100, 100, 100)));
@@ -83,9 +88,6 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldCreateOneOfEachItem() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         String commands = String.join(" endl ",
                 "letrehoz cso cs1",
                 "letrehoz pumpa p1",
@@ -116,9 +118,6 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldClearAllViews() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         String commands = String.join(" endl ",
                 "letrehoz cso cs1",
                 "letrehoz pumpa p1",
@@ -144,9 +143,6 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfInvalidNumberOfParameters() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("lep player1");
         button.click();
 
@@ -155,9 +151,6 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfNonExistentPlayer() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("lep player1 mezo1");
         button.click();
 
@@ -166,9 +159,6 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfNonExistentMezo() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("alwaysdebug");
         button.click();
 
@@ -183,9 +173,6 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfInvalidNumberOfParametersForOsszekot() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("alwaysdebug");
         button.click();
 
@@ -196,10 +183,7 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void shouldWarnIfNonExistentFirstMezo() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
+    public void shouldWarnIfNonExistentFirstMezoInOsszekot() {
         inputField.setText("alwaysdebug");
         button.click();
 
@@ -210,10 +194,7 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
     }
 
     @Test
-    public void shouldWarnIfNonExistentSecondMezo() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
+    public void shouldWarnIfNonExistentSecondMezoInOsszekot() {
         inputField.setText("alwaysdebug");
         button.click();
 
@@ -224,7 +205,7 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
         inputField.setText("letrehoz cso cs1");
         button.click();
 
-        inputField.setText("osszekot cs1 f1");
+        inputField.setText("osszekot cs1 mezo2");
         button.click();
 
         assertTrue(window.textBox("jtaOutput").text().contains("Nincs ilyen nevű mező: mezo2"));
@@ -232,9 +213,6 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldConnectTwoExistingMezos() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("alwaysdebug");
         button.click();
 

@@ -1,22 +1,12 @@
 package UITests;
 
-import org.assertj.swing.core.GenericTypeMatcher;
 import org.assertj.swing.core.Settings;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
-import org.assertj.swing.fixture.JButtonFixture;
-import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.drukmakor.Grafika;
-import org.drukmakor.ObjectView;
 import org.drukmakor.ParancsErtelmezo;
 import org.drukmakor.ParancsErtelmezoView;
-import org.junit.Test;
-
-import javax.swing.*;
-import java.awt.*;
-
-import static org.junit.Assert.*;
 
 public class TestTesting extends AssertJSwingJUnitTestCase {
     private FrameFixture window;
@@ -29,7 +19,7 @@ public class TestTesting extends AssertJSwingJUnitTestCase {
         ParancsErtelmezoView dummyPEV = new ParancsErtelmezoView();
         ParancsErtelmezo dummyPE = new ParancsErtelmezo(dummyPEV);
 
-        dummyPE.EnableDebugMode(false);
+        dummyPE.EnableDebugMode(true);
         dummyPE.OutputToView(true);
 
         dummyPE.EnableDebugMode(true);

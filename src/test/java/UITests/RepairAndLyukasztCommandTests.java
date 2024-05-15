@@ -15,7 +15,8 @@ import static org.junit.Assert.assertTrue;
 
 public class RepairAndLyukasztCommandTests extends AssertJSwingJUnitTestCase {
     private FrameFixture window;
-
+    JTextComponentFixture inputField;
+    JButtonFixture button;
     @Override
     protected void onSetUp() {
         Settings settings = new Settings();
@@ -24,22 +25,20 @@ public class RepairAndLyukasztCommandTests extends AssertJSwingJUnitTestCase {
         ParancsErtelmezoView dummyPEV = new ParancsErtelmezoView();
         ParancsErtelmezo dummyPE = new ParancsErtelmezo(dummyPEV);
 
-        dummyPE.EnableDebugMode(false);
-        dummyPE.OutputToView(true);
-
         dummyPE.EnableDebugMode(true);
+        dummyPE.OutputToView(true);
+        dummyPE.runFromString("torol");
 
         Grafika frame = GuiActionRunner.execute(() -> new Grafika(dummyPEV, dummyPE));
 
         window = new FrameFixture(robot(), frame);
         window.show();
+        inputField = window.panel("pGridBag").textBox("tfInput");
+        button = window.button("bSend");
     }
 
     @Test
     public void shouldWarnIfInvalidNumberOfParametersForSzerel() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("szerel player1 extraParam");
         button.click();
 
@@ -48,9 +47,6 @@ public class RepairAndLyukasztCommandTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfNonExistentPlayerForSzerel() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("szerel player1");
         button.click();
 
@@ -59,9 +55,6 @@ public class RepairAndLyukasztCommandTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldPerformRepairWithValidPlayer() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("alwaysdebug");
         button.click();
 
@@ -75,9 +68,6 @@ public class RepairAndLyukasztCommandTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfInvalidNumberOfParametersForLyukaszt() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("lyukaszt player1 extraParam");
         button.click();
 
@@ -86,9 +76,6 @@ public class RepairAndLyukasztCommandTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfNonExistentPlayerForLyukaszt() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("lyukaszt player1");
         button.click();
 
@@ -97,9 +84,6 @@ public class RepairAndLyukasztCommandTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldPerformLyukasztWithValidPlayer() {
-        JTextComponentFixture inputField = window.panel("pGridBag").textBox("tfInput");
-        JButtonFixture button = window.button("bSend");
-
         inputField.setText("alwaysdebug");
         button.click();
 
