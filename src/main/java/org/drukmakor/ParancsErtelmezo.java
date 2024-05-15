@@ -22,7 +22,7 @@ public class ParancsErtelmezo {
     private boolean ENABLE_AUTOCORRECT = true;
 
     //Írja-e ki a parancsértelmező a sikeres parancsok után a sikeres üzenetet
-    private boolean success_message = false;
+    private boolean success_message = true;
 
     //Ha debug módban vagyunk, akkor minden parancs elérhető
     private boolean debug_mode = true;
@@ -569,7 +569,7 @@ public class ParancsErtelmezo {
         }
         //Ha "pumpa"-t adtak meg, akkor pumpát építünk
         if (param[1].equals("pumpa")) {
-            jatekosMap.get(param[0]).PumpatEpit();
+            Outputln(jatekosMap.get(param[0]).PumpatEpit());
         }
         //Ha "cso"-t adtak meg, akkor csövet építünk
         else{
