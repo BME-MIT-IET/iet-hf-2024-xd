@@ -43,7 +43,10 @@ public class AllitCommandTests extends AssertJSwingJUnitTestCase {
 
     @Test
     public void shouldWarnIfInvalidNumberOfParametersForAllit() {
-        inputField.setText("allit player1 bemenet");
+        inputField.setText("letrehoz pumpa p1");
+        button.click();
+
+        inputField.setText("allit player1 p1");
         button.click();
 
         assertTrue(window.textBox("jtaOutput").text().contains("Az allit parancs 3 paramétert vár. (allit <jatekos> <bemenet> <kimenet>)"));

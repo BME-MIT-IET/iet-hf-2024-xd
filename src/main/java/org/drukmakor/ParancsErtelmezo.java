@@ -115,7 +115,7 @@ public class ParancsErtelmezo {
                 parancsok.add(line);
             }
         } catch (IOException ioe) {
-            System.out.println("Hiba a fájl beolvasásakor! ("+ ioe.toString() + ")");
+            Outputln("Hiba a fájl beolvasásakor! ("+ ioe.toString() + ")");
         }
 
         parseAll(parancsok);
