@@ -29,8 +29,6 @@ public class TermelCommandTests extends AssertJSwingJUnitTestCase {
 
         dummyPE.EnableDebugMode(true);
         dummyPE.OutputToView(true);
-
-        dummyPE.EnableDebugMode(true);
         dummyPE.runFromString("torol endl veletlen ki");
 
         Grafika frame = GuiActionRunner.execute(() -> new Grafika(dummyPEV, dummyPE));
