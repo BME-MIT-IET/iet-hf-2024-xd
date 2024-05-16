@@ -16,7 +16,7 @@ public class Grafika extends JFrame {
     private boolean darkMode = false;
     private boolean Fear = false;
 
-    private boolean alwaysdebug = false;
+    private boolean alwaysdebug = true;
 
     ArrayList<ObjectView> views = new ArrayList<ObjectView>();
 
