@@ -34,7 +34,7 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
         ParancsErtelmezo dummyPE = new ParancsErtelmezo(dummyPEV);
 
         dummyPE.EnableDebugMode(true);
-        dummyPE.runFromString("torol");
+        dummyPE.runFromString("torol endl veletlen ki");
         dummyPE.OutputToView(true);
 
         dummyPE.EnableDebugMode(true);
@@ -234,4 +234,54 @@ public class CommandInputTests extends AssertJSwingJUnitTestCase {
         assertNotNull(ObjectView.getViewByName("cs1"));
     }
 
+    @Test
+    public void autoCorrectWorksTest() {
+        inputField.setText("letreh cso cs1");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Hibás parancsot adtál meg: letreh\n" +
+                "* Hibás parancs: letreh(??) cso cs1\n" +
+                "* Erre gondotál: \"letrehoz\"?\n" +
+                "* Ha igen, akkor írd be hogy \"i\", és a parancs automatikusan ki lesz javítva és újra lefut!"));
+    }
+
+    @Test
+    public void successFulAutoCorrectTestAfterConfirm() {
+        inputField.setText("letreh cso cs1");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Hibás parancsot adtál meg: letreh\n" +
+                "* Hibás parancs: letreh(??) cso cs1\n" +
+                "* Erre gondotál: \"letrehoz\"?\n" +
+                "* Ha igen, akkor írd be hogy \"i\", és a parancs automatikusan ki lesz javítva és újra lefut!"));
+
+        assertNull(ObjectView.getViewByName("cs1"));
+
+        inputField.setText("i");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("A cs1 nevű cső létrehozása sikeres volt!"));
+
+        assertNotNull(ObjectView.getViewByName("cs1"));
+    }
+
+    @Test
+    public void autoCorrectForExistingObject() {
+        inputField.setText("letrehoz cso cs1");
+        button.click();
+        inputField.setText("letrehoz szerelo sze1");
+        button.click();;
+        inputField.setText("lep sze1 cs");
+        button.click();
+
+        assertTrue(window.textBox("jtaOutput").text().contains("Nincs ilyen nevű mező: cs\n" +
+                "* Hibás parancs: lep sze1 cs(??)\n" +
+                "* Erre gondotál: \"cs1\"?\n" +
+                "* Ha igen, akkor írd be hogy \"i\", és a parancs automatikusan ki lesz javítva és újra lefut!"));
+
+        assertNotNull(ObjectView.getViewByName("cs1"));
+
+        inputField.setText("i");
+        button.click();
+    }
 }

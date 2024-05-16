@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class TermelCommandTests extends AssertJSwingJUnitTestCase {
+public class TermelAndDeleteCommandTests extends AssertJSwingJUnitTestCase {
     private FrameFixture window;
     JButtonFixture button;
     JTextComponentFixture inputField;
@@ -93,5 +93,35 @@ public class TermelCommandTests extends AssertJSwingJUnitTestCase {
         inputField.setText("termel ci1 object"); // Hiba: érvénytelen objektumtípus
         button.click();
         assertTrue(window.textBox("jtaOutput").text().contains("Hibás paraméter. A paraméternek \"pumpa\" vagy \"cso\"-nak kell lennie."));
+    }
+
+    @Test
+    public void shouldRemoveAllViewsInTorol() {
+        inputField.setText("letrehoz cso cso1");
+        button.click();
+
+        // Ellenőrizzük, hogy a nézet létrejött
+        assertNotNull(ObjectView.getViewByName("cso1"));
+
+        inputField.setText("letrehoz pumpa p1");
+        button.click();
+
+        // Ellenőrizzük, hogy a nézet létrejött
+        assertNotNull(ObjectView.getViewByName("p1"));
+
+        inputField.setText("letrehoz ciszterna c1");
+        button.click();
+
+        // Ellenőrizzük, hogy a nézet létrejött
+        assertNotNull(ObjectView.getViewByName("c1"));
+
+        // Meghívjuk a törlés parancsot
+        inputField.setText("torol");
+        button.click();
+
+        // Ellenőrizzük, hogy a nézet törölve lett
+        assertNull(ObjectView.getViewByName("cso1"));
+        assertNull(ObjectView.getViewByName("p1"));
+        assertNull(ObjectView.getViewByName("c1"));
     }
 }
