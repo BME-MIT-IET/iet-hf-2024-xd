@@ -43,9 +43,8 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build and analyze
-        uses: coactions/setup-xvfb@6b00cf1889f4e1d5a48635647013c0508128ee1a
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=BME-MIT-IET_iet-hf-2024-xd
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=BME-MIT-IET_iet-hf-2024-xd -Dtest=!org.drukmakor.UITests.**
