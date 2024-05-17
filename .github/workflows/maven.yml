@@ -28,6 +28,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: setup-xvfb
+        uses: coactions/setup-xvfb@v1.0.1
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
@@ -43,7 +46,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build and analyze
-        uses: coactions/setup-xvfb@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
