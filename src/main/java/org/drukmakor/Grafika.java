@@ -10,13 +10,13 @@ import java.util.ArrayList;
  * Ez az osztály felelős a Grafikus megjelenítésért.
  * Java swing library-ét használja, hogy az elemeket egy GridBaglayout-ba rendezze, és megjeleítse
  */
-public class Grafika {
+public class Grafika extends JFrame {
     private ParancsErtelmezoView pe;
     private ParancsErtelmezo p;
     private boolean darkMode = false;
     private boolean Fear = false;
 
-    private boolean alwaysdebug = false;
+    private boolean alwaysdebug = true;
 
     ArrayList<ObjectView> views = new ArrayList<ObjectView>();
 
@@ -31,16 +31,10 @@ public class Grafika {
     public Grafika(ParancsErtelmezoView _pe, ParancsErtelmezo _p) {
         pe = _pe;
         p = _p;
-
-    }
-
-    /**
-     * Ez az osztály igazából egy óriási boilerplate, ami csak azt írja, le hogy hogyan fog kinézni a grafikus felület.
-     */
-    void draw() {
-        JFrame frame = new JFrame("Arakis");
+        setTitle("Arakis");
 
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setName("pGridBag");
         GridBagConstraints constraints = new GridBagConstraints();
 
         JPanel drawPanel = new JPanel(new BorderLayout()) {
@@ -48,10 +42,11 @@ public class Grafika {
                 ObjectView.DrawAllViews(g, darkMode);
             }
         };
+        drawPanel.setName("pDraw");
         ObjectView.StartAnimation(drawPanel);
 
-
         JPanel cantSee = new JPanel(new GridBagLayout());
+        cantSee.setName("pCantSee");
         cantSee.setPreferredSize(new Dimension(990, 27));
         cantSee.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         constraints.gridwidth = 2;
@@ -63,14 +58,16 @@ public class Grafika {
 
         JButton newGame = new JButton("Új játék");
         newGame.setBackground(Color.WHITE);
+        newGame.setName("bNewGame");
         newGame.addActionListener(e -> {
             pe.EnableDebugMode(true);
             pe.SendToPE("torol");
-			pe.SendToPE("tolt commandfiles/alap");
+            pe.SendToPE("tolt commandfiles/alap");
             pe.EnableDebugMode(false);
             if(alwaysdebug) {
                 pe.EnableDebugMode(true);
-            }});
+            }
+        });
         constraints.gridwidth = 1;
         constraints.anchor = GridBagConstraints.WEST;
         constraints.weightx = 1;
@@ -79,15 +76,13 @@ public class Grafika {
         cantSee.add(newGame, constraints);
 
         JButton newUniqueGame = new JButton("Új játék egyedi pályával");
+        newUniqueGame.setName("bNewUniqueGame");
         newUniqueGame.setBackground(Color.WHITE);
         newUniqueGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String path = JOptionPane.showInputDialog(frame, "Path: ");
-                //Megnézzük, hogy a filename végén van-e .txt, ha nincs, hozzáadjuk
-
-                if (path != null && !path.isEmpty())
-                {
+                String path = JOptionPane.showInputDialog(Grafika.this, "Path: ");
+                if (path != null && !path.isEmpty()) {
                     if (!path.endsWith(".txt")) {
                         path += ".txt";
                     }
@@ -109,10 +104,7 @@ public class Grafika {
                     } else {
                         pe.ReceiveFromPE("File nem létezik.\n");
                     }
-
-                }
-                else
-                {
+                } else {
                     pe.ReceiveFromPE("Nem írtál be semmit.\n");
                 }
             }
@@ -125,6 +117,7 @@ public class Grafika {
 
         JButton help = new JButton("Súgó");
         help.setBackground(Color.WHITE);
+        help.setName("bHelp");
         help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -158,7 +151,7 @@ public class Grafika {
                             "And when it has gone past I will turn the inner eye to see its path.\n" +
                             "Where the fear has gone there will be nothing. Only I will remain.”\n -- Bene Gesserit Litany";
                 }
-                JOptionPane.showMessageDialog(frame, output);
+                JOptionPane.showMessageDialog(Grafika.this, output);
             }
         });
         constraints.anchor = GridBagConstraints.WEST;
@@ -167,6 +160,7 @@ public class Grafika {
         cantSee.add(help, constraints);
 
         JPanel cantSee2 = new JPanel(new GridBagLayout());
+        cantSee2.setName("pCantSee2");
         constraints.anchor = GridBagConstraints.WEST;
         constraints.weightx = 2000;
         constraints.gridx = 3;
@@ -174,8 +168,9 @@ public class Grafika {
         cantSee.add(cantSee2, constraints);
 
         pe.setDrawpanel(drawPanel);
-        drawPanel.setPreferredSize(new Dimension(980, 740));
+        drawPanel.setPreferredSize(new Dimension(980, 500));
         drawPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        drawPanel.setName("pDrawPanel");
         constraints.gridwidth = 2;
         constraints.insets = new Insets(10, 10, 0, 10);
         constraints.weightx = 0;
@@ -186,10 +181,12 @@ public class Grafika {
 
         JTextArea output = new JTextArea("");
 
+        output.setName("jtaOutput");
         pe.setOutput(output);
         output.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(output);
         scrollPane.setPreferredSize(new Dimension(880, 156));
+        scrollPane.setName("spOutput");
         constraints.insets = new Insets(10, 10, 0, 0);
         constraints.gridwidth = 1;
         constraints.gridx = 0;
@@ -197,8 +194,9 @@ public class Grafika {
 
         panel.add(scrollPane, constraints);
 
-        TextField input = new TextField("");
+        JTextField input = new JTextField("");
         constraints.gridwidth = 2;
+        input.setName("tfInput");
         input.setPreferredSize(new Dimension(980, 20));
         constraints.insets = new Insets(0, 10, 0, 0);
         constraints.gridx = 0;
@@ -208,6 +206,9 @@ public class Grafika {
 
 
         JButton send = new JButton("O.k.");
+        send.setBackground(Color.WHITE);
+        send.setPreferredSize(new Dimension(75, 27));
+        send.setName("bSend");
         send.addActionListener(e -> {
             String inp = input.getText();
             if (inp.equals("dark")){
@@ -223,18 +224,12 @@ public class Grafika {
                 cantSee2.setBackground(new Color(100, 100, 100));
                 cantSee.setBackground(new Color(100, 100, 100));
                 input.setBackground(new Color(100, 100, 100));
-
-            }
-            else if (inp.equals("Dune")) {
+            } else if (inp.equals("Dune")) {
                 Fear = true;
-            }
-            else if (inp.equals("alwaysdebug"))
-            {
+            } else if (inp.equals("alwaysdebug")) {
                 alwaysdebug = true;
                 p.EnableDebugMode(true);
-            }
-            else
-            {
+            } else {
                 pe.SendToPE(inp);
             }
             input.setText("");
@@ -261,7 +256,6 @@ public class Grafika {
 // Add the KeyListener to the text field
         input.addKeyListener(keyListener);
 
-
         send.setBackground(Color.WHITE);
         send.setPreferredSize(new Dimension(75, 27));
         constraints.insets = new Insets(0, 0, 0, 0);
@@ -274,19 +268,19 @@ public class Grafika {
 
         if (darkMode){
             Color bgcolor = new Color(80, 80, 80);
-            frame.setBackground(bgcolor);
+            setBackground(bgcolor);
         }
         // Create a JScrollPane and add your main panel to it
         JScrollPane scrollPane2 = new JScrollPane(panel);
 
         // Add the JScrollPane to the JFrame instead of the main panel
-        frame.getContentPane().add(scrollPane2);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(1000,1000);
+        getContentPane().add(scrollPane2);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(1000,1000);
         drawPanel.setMinimumSize(new Dimension(1000, 800));
         input.setMinimumSize(new Dimension(900, 20));
         output.setMinimumSize(new Dimension(900, 156));
-        frame.pack();
-        frame.setVisible(true);
+        pack();
+        setVisible(true);
     }
 }

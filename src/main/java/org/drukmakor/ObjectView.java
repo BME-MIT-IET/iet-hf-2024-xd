@@ -158,6 +158,20 @@ public abstract class ObjectView {
 	}
 
 	/**
+	 * Visszaadja a megadott nevű nézetet.
+	 * @param name - A nézet neve
+	 * @return Az első nézet a megadott névvel, vagy null, ha nincs ilyen nézet
+	 */
+	public static ObjectView getViewByName(String name) {
+		for (ObjectView view : allViews) {
+			if (view.nev.equals(name)) {
+				return view;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Törli az összes eddig léterhozott nézetet.
 	 */
 	static public void RemoveAllViews() {

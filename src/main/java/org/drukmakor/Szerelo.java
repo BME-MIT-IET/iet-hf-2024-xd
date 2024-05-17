@@ -1,9 +1,6 @@
 package org.drukmakor;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.text.ZoneView;
 
 /**
  * A szerelők tartják karban a csőhálózatot. ők javítják meg az elromlott
@@ -139,12 +136,16 @@ public class Szerelo extends Jatekos {
 	 * hasznalja A szerelonek egy csovon kell allnia, ennek a csonek hivja meg a
 	 * PumpaEpit fuggvenyet A szerelo pumpaHatizsak kollekciojabol ki is torli a
 	 * pumpat, amit elhelyezett.
+	 *
+	 * @return
 	 */
 	@Override
-	public void PumpatEpit() {
+	public String PumpatEpit() {
 		if(pumpaHatizsak.size() == 0)
-			System.out.println("Nincs pumpa a hatizsakban");
-		else
+			return "Nincs pumpa a hatizsakban";
+		else {
 			helyzet.PumpaEpit();
+			return "Sikeresen megépült a pumpa";
+		}
 	}
 }

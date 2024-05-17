@@ -82,9 +82,13 @@ public abstract class Jatekos {
 	public void CsovetFelcsatol(){}
 
 	/**
-	 * Nincs alap implementáció, a szerelő osztály felüldefiniálja
-	 */
-	public void PumpatEpit(){}
+     * Nincs alap implementáció, a szerelő osztály felüldefiniálja
+     *
+     * @return
+     */
+	public String PumpatEpit(){
+        return null;
+    }
 
 	/**
 	 * A játékos ragadóssá teszi a mezőt, amin áll
