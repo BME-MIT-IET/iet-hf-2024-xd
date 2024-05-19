@@ -38,7 +38,7 @@ public class PumpaView extends MezoView {
 	 * sem, és az, hogy van-e benne víz vagy sem.
 	 */
 	@Override
-	public void Notify(Mezo m) {
+	public void NotifyField(Mezo m) {
 		mukodik = m.getMukodik();
 		nevSzin = m.getVizmennyiseg() == 0 ? Color.WHITE : vizSzin;
 

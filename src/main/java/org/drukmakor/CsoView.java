@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class CsoView extends MezoView {
 	private static final Color szin = Color.BLACK; // Fekete
 	private static final Color vizSzin = new Color(99, 168, 252); // Kék
-	private static final int vastag = 10; // Kirajzolt cső vastagsága
-	private static final BasicStroke stroke = new BasicStroke(vastag);
+	private static final int VASTAGSAG = 10; // Kirajzolt cső vastagsága
+	private static final BasicStroke stroke = new BasicStroke(VASTAGSAG);
 
 	/**
 	 * A cső egyik vége az ObjectView-ből örökölt x, y. A cső másik vége pedig ez a
@@ -47,7 +47,7 @@ public class CsoView extends MezoView {
 	 * @param m - A meghívó Cso
 	 */
 	@Override
-	public void Notify(Mezo m) {
+	public void NotifyField(Mezo m) {
 		ArrayList<Mezo> szomszedok = m.GetSzomszedok();
 
 		// Cső nem látható ha nincs két szomszédja
@@ -106,7 +106,7 @@ public class CsoView extends MezoView {
 		if (csuszik || ragad) {
 
 			g2.setStroke(
-					new BasicStroke(vastag + 4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 },
+					new BasicStroke(VASTAGSAG + 4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 },
 							animValue));
 			// Csuszósságnak nagyobb a precedenciája -- ez alapján dől el a modifier szine
 			g2.setColor(csuszik ? Color.CYAN : Color.GREEN);
@@ -128,7 +128,7 @@ public class CsoView extends MezoView {
 			g.drawString("!", warnX - 2, warnY - 2);
 
 			g2.setStroke(
-					new BasicStroke(vastag, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 3 }, 0));
+					new BasicStroke(VASTAGSAG, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 3 }, 0));
 			g2.setColor(new Color(255, 0, 0, 100));
 			g2.drawLine(x, y, x2, y2);
 		}

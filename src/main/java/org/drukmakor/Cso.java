@@ -40,7 +40,7 @@ public class Cso extends Mezo {
 	@Override
 	public void Megjavit() {
 		setMukodik(true);
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	public boolean JatekosElenged(Jatekos j) {
@@ -106,9 +106,9 @@ public class Cso extends Mezo {
 		SzomszedTorol(torlendo);
 		SzomszedHozzaad(pumpa);
 
-		view.Notify(this);
-		getJatekosok().get(0).getView().Notify(getJatekosok().get(0)); //Notify-olni kell a rajta álló játékost is
-		pumpa.getView().Notify(pumpa);
+		view.NotifyField(this);
+		getJatekosok().get(0).getView().NotifyPlayer(getJatekosok().get(0)); //Notify-olni kell a rajta álló játékost is
+		pumpa.getView().NotifyField(pumpa);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class Cso extends Mezo {
 			lyukCooldown = 5; //5 Körig nem lehet majd kilyukasztani a csövet
 		}
 
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class Cso extends Mezo {
 		else{
 			vizmennyiseg += meret;
 		}
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -160,20 +160,20 @@ public class Cso extends Mezo {
 	public void VizetCsokkent(int meret) throws Exception {
 		if (meret <= vizmennyiseg) {
 			vizmennyiseg -= meret;
-			view.Notify(this);
+			view.NotifyField(this);
 		}
 	}
 
 	public void Csuszik() {
 		csuszos = 5;
-		view.Notify(this);
+		view.NotifyField(this);
 	} //3 körig lesz csúszós a cső
 
 	public void Ragad() {
 		if (ragados == 0) {
 			ragados = 5; //3 körig lesz ragadós a cső
 			ragadossaTette = getJatekosok().get(0);
-			view.Notify(this);
+			view.NotifyField(this);
 		}
 	}
 
@@ -193,12 +193,12 @@ public class Cso extends Mezo {
 		if (lyukCooldown > 0) {
 			lyukCooldown -= 1;
 		}
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	public void SetVizmennyiseg(int viz) {
 		vizmennyiseg = viz;
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	public int getVizmennyiseg() {
@@ -216,7 +216,7 @@ public class Cso extends Mezo {
 		ArrayList<Mezo> szomszedok = GetSzomszedok();
 		if (szomszedok.size() < 2)
 			szomszedok.add(m);
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	public boolean SzomszedFelcsatol(Mezo m) {

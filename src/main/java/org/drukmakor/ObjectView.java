@@ -79,8 +79,8 @@ public abstract class ObjectView {
 	 * view-nak, ami ez alapján tudja frissíteni a grafikáját.
 	 * @param m - Az objektum ami szól a viewnak hogy frissítsen.
 	 */
-	public void Notify(Mezo m) {};
-	public void Notify(Jatekos m) {};
+	public void NotifyField(Mezo m) {};
+	public void NotifyPlayer(Jatekos m) {};
 
 	/**
 	 * A viewhez tartozó grafika rárajzolása az adott bufferre.

@@ -28,14 +28,14 @@ public abstract class JatekosView extends ObjectView {
 	}
 
 	@Override
-	public void Notify(Jatekos j) {
+	public void NotifyPlayer(Jatekos j) {
 		Mezo ujHelyzet = j.getHelyzet();
 
 		// Mát ottlévő játékosok frissítése
 		if (ujHelyzet != helyzet) {
 			helyzet = ujHelyzet;
 			for (Jatekos jSzomszed : helyzet.getJatekosok()) {
-				jSzomszed.getView().Notify(jSzomszed);
+				jSzomszed.getView().NotifyPlayer(jSzomszed);
 			}
 		}
 
@@ -54,7 +54,7 @@ public abstract class JatekosView extends ObjectView {
 	/**
 	 * Animációhoz segéd függvény
 	 */
-	private static final int animationSpeed = 5;
+	private static final int ANIMATION_SPEED = 5;
 	public static boolean haveSameSign(int num1, int num2) {
 		return (num1 >= 0 && num2 >= 0) || (num1 < 0 && num2 < 0);
 	}
@@ -71,7 +71,7 @@ public abstract class JatekosView extends ObjectView {
 			int dy = y - drawY;
 
 			double d = Math.sqrt(dx * dx + dy * dy);
-			double ratio = animationSpeed / d;
+			double ratio = ANIMATION_SPEED / d;
 
 			drawX += (int) (dx * ratio);
 			drawY += (int) (dy * ratio);
