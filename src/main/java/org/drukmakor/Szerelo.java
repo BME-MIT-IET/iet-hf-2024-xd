@@ -1,9 +1,6 @@
 package org.drukmakor;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.text.ZoneView;
 
 /**
  * A szerelők tartják karban a csőhálózatot. ők javítják meg az elromlott
@@ -47,7 +44,7 @@ public class Szerelo extends Jatekos {
 		helyzet.SzomszedTorol(m);
 		m.SzomszedTorol(helyzet);
 		//Notify-olni kell a cső viewját
-		m.view.Notify(m);
+		m.view.NotifyField(m);
 
 	}
 
@@ -78,7 +75,7 @@ public class Szerelo extends Jatekos {
 			csoHatizsak.add(m);
 		}
 		//Notify-olni kell a cső viewját
-		m.view.Notify(m);
+		m.view.NotifyField(m);
 
 	}
 

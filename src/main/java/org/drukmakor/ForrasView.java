@@ -28,7 +28,7 @@ public class ForrasView extends MezoView {
 	 * sem), ezért egyelőre üres
 	 */
 	@Override
-	public void Notify(Mezo m) {
+	public void NotifyField(Mezo m) {
 	}
 
 	/**

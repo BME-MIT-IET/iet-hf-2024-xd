@@ -31,7 +31,7 @@ public class Ciszterna extends Mezo {
 		// ha van pumpa a ciszterna korul
 		if (termeltpumpak.size() >= 1)
 			termeltpumpak.remove(termeltpumpak.size() - 1);
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class Ciszterna extends Mezo {
 		if (randomNum > 0.8) // egyébként 20% eséllyel termel pumpát
 			termeltpumpak.add(new Pumpa(false));
 
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Ciszterna extends Mezo {
 			ujcso.SzomszedHozzaad(this);
 			this.SzomszedHozzaad(ujcso);
 		}
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -97,6 +97,6 @@ public class Ciszterna extends Mezo {
 		}
 		this.CsovetKeszit();
 		this.PumpaKeszit();
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 }

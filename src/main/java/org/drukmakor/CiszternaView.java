@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class CiszternaView extends MezoView {
 	private static final Color szin = new Color(245, 154, 35); // Narancs: #f59a23
 	private static final Color termeltPumpaSzin = new Color(113, 113, 113); // Szürke: #717171
-	private static final int termeltEltolas = 50; // Termelt elemek eltolása
+	private static final int TERMELT_ELTOLAS = 50; // Termelt elemek eltolása
 
 	private int pumpak = 0; // Csiszternánál található termelt pumpák
 	private int csovek = 0; // Csiszternánál található termelt csovek
@@ -33,7 +33,7 @@ public class CiszternaView extends MezoView {
 	 * Ciszterna nézetének frissítése
 	 */
 	@Override
-	public void Notify(Mezo m) {
+	public void NotifyField(Mezo m) {
 		pumpak = m.getTermeltPumpak().size();
 		if (pumpak > 8)
 			pumpak = 8;
@@ -66,8 +66,8 @@ public class CiszternaView extends MezoView {
 		int pumpaMeret = 15;
 		for (int i = 0; i < pumpak; i++) {
 			double deg = startDeg + i * (Math.PI * 2 / pumpak);
-			int pX = x + (int) (termeltEltolas * Math.cos(deg));
-			int pY = y + (int) (termeltEltolas * Math.sin(deg));
+			int pX = x + (int) (TERMELT_ELTOLAS * Math.cos(deg));
+			int pY = y + (int) (TERMELT_ELTOLAS * Math.sin(deg));
 			g.fillOval(pX - pumpaMeret / 2, pY - pumpaMeret / 2, pumpaMeret, pumpaMeret);
 		}
 

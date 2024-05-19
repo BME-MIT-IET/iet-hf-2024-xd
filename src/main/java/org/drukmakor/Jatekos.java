@@ -41,7 +41,7 @@ public abstract class Jatekos {
 			}
 		}
 
-		view.Notify(this);
+		view.NotifyPlayer(this);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public abstract class Jatekos {
 	 */
 	public void setHelyzet(Mezo m) {
 		helyzet = m;
-		view.Notify(this);
+		view.NotifyPlayer(this);
 	}
 
 	/**

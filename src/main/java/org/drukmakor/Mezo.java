@@ -163,7 +163,7 @@ public abstract class Mezo {
 	public void SzomszedHozzaad(Mezo m) {
 		if (szomszedok.size() < maxSzomszedok) {
 			szomszedok.add(m);
-			view.Notify(this);
+			view.NotifyField(this);
 		}
 	}
 
@@ -174,7 +174,7 @@ public abstract class Mezo {
 	 */
 	public void SzomszedTorol(Mezo m) {
 		szomszedok.remove(m);
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public abstract class Mezo {
 	public boolean SzomszedFelcsatol(Mezo m) {
 		if (szomszedok.size() < maxSzomszedok) {
 			szomszedok.add(m);
-			view.Notify(this);
+			view.NotifyField(this);
 			return true;
 		}
 		return false;
@@ -226,7 +226,7 @@ public abstract class Mezo {
 	 */
 	public void setMukodik(boolean status) {
 		mukodik = status;
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public abstract class Mezo {
 
 	public void SetVizmennyiseg(int mennyiseg) {
 		vizmennyiseg = mennyiseg;
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	public boolean getMukodik() {

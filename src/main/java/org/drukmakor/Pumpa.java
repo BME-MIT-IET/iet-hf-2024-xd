@@ -1,9 +1,6 @@
 package org.drukmakor;
 
-import java.nio.BufferOverflowException;
-import java.nio.BufferUnderflowException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -59,7 +56,7 @@ public class Pumpa extends Mezo {
 		ArrayList<Mezo> szomszedok = super.GetSzomszedok(); // Mezo osztaly attributuma
 		if (szomszedok.size() < maxCso)
 			szomszedok.add(m);
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -85,7 +82,7 @@ public class Pumpa extends Mezo {
 				this.kimenet = kimenet;
 			}
 		}
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -95,7 +92,7 @@ public class Pumpa extends Mezo {
 	 */
 	public void Megjavit() {
 		setMukodik(true);
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -163,7 +160,7 @@ public class Pumpa extends Mezo {
 			}
 		}
 		catch (Exception e){}
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 
 	/**
@@ -193,7 +190,7 @@ public class Pumpa extends Mezo {
 		} else
 			this.vizmennyiseg = meret;
 
-		view.Notify(this);
+		view.NotifyField(this);
 	}
 	public int getVizmennyiseg() {
 		return vizmennyiseg;
