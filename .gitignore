@@ -1,1 +1,7 @@
+# IDE specific folders
 .idea
+.settings
+
+# Build artifacts
+bin
+target
