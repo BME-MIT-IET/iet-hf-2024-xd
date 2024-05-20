@@ -1,6 +1,11 @@
 # IDE specific folders
-.idea
-.settings
+## IntelliJ
+.idea/
+
+## Eclipse
+.settings/
+.project
+.classpath
 
 # Build artifacts
 bin
