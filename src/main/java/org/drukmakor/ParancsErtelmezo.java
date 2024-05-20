@@ -669,14 +669,11 @@ public class ParancsErtelmezo {
         //Felvesszük az egész csövet
         if (egeszetVeszunkFel) {
             jatekosMap.get(param[0]).EgeszCsovetLecsatol(mezoMap.get(param[2]));
+            return;
         }
+
         //Felveszzük a cső felét
-        else{
-            jatekosMap.get(param[0]).CsovetLecsatol(mezoMap.get(param[2]));
-        }
-
-
-
+        jatekosMap.get(param[0]).CsovetLecsatol(mezoMap.get(param[2]));
     }
 
 
@@ -1258,40 +1255,42 @@ public class ParancsErtelmezo {
             }
         }
         //Ha a legközelebbi szó távolsága kisebb mint 4, akkor figyelmeztetjük a felhasználót
-        if (min < 4) {
-            //Kiírjuk a hibás parancsot és az összes paramétert
-            Output("* Hibás parancs: " + command);
-            //Ha a parancs volt a hibás, akkor rakunk utána egy (?)-t
-            if (corretedParamIndex == 0)
+        if (min >= 4) {
+            return;
+        }
+
+        //Kiírjuk a hibás parancsot és az összes paramétert
+        Output("* Hibás parancs: " + command);
+        //Ha a parancs volt a hibás, akkor rakunk utána egy (?)-t
+        if (corretedParamIndex == 0)
+        {
+            Output("(??)");
+        }
+        //Egy for ciklussal kiírjuk az összes paramétert, és ha az adott paraméter volt a hibás, akkor rakunk utána egy (?)-t
+        for (int i = 0; i < param.length; i++)
+        {
+            Output(" " + param[i]);
+            if (corretedParamIndex == i+1)
             {
                 Output("(??)");
             }
-            //Egy for ciklussal kiírjuk az összes paramétert, és ha az adott paraméter volt a hibás, akkor rakunk utána egy (?)-t
-            for (int i = 0; i < param.length; i++)
-            {
-                Output(" " + param[i]);
-                if (corretedParamIndex == i+1)
-                {
-                    Output("(??)");
-                }
-            }
+        }
 
 
-            Outputln("");
-            Outputln("* Erre gondotál: \"" + closest+ "\"?");
-            Outputln("* Ha igen, akkor írd be hogy \"i\", és a parancs automatikusan ki lesz javítva és újra lefut!");
+        Outputln("");
+        Outputln("* Erre gondotál: \"" + closest+ "\"?");
+        Outputln("* Ha igen, akkor írd be hogy \"i\", és a parancs automatikusan ki lesz javítva és újra lefut!");
 
-            //Beállítjuk a kijavított parancsot vagy paramétert, ha esetleg újra akarjuk futtatni a kijavított parancsot. ("i" parancs)
-            acLastCommand = command;
-            acLastParams = param;
-            if (corretedParamIndex == 0)
-            {
-                acLastCommand = closest;
-            }
-            else
-            {
-                acLastParams[corretedParamIndex-1] = closest;
-            }
+        //Beállítjuk a kijavított parancsot vagy paramétert, ha esetleg újra akarjuk futtatni a kijavított parancsot. ("i" parancs)
+        acLastCommand = command;
+        acLastParams = param;
+        if (corretedParamIndex == 0)
+        {
+            acLastCommand = closest;
+        }
+        else
+        {
+            acLastParams[corretedParamIndex-1] = closest;
         }
     }
 
