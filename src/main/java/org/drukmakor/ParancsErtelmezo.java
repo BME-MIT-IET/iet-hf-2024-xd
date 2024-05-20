@@ -8,9 +8,9 @@ import static org.drukmakor.Main.pontsz;
 public class ParancsErtelmezo {
 
     //Pályán lévő mezők neveit tároló HashMap
-    private HashMap<String, Mezo> mezoMap = new HashMap<String, Mezo>();
+    private final HashMap<String, Mezo> mezoMap = new HashMap<String, Mezo>();
     //Pályán lévő játékosok neveit tároló HashMap
-    private HashMap<String, Jatekos> jatekosMap = new HashMap<String, Jatekos>();
+    private final HashMap<String, Jatekos> jatekosMap = new HashMap<String, Jatekos>();
 
 
     //Automatikusan generált neveknél mi a következő szám, amit hozzá kell adni a nevekhez
@@ -46,9 +46,36 @@ public class ParancsErtelmezo {
 
     //A következő string tömbök helyesen beírt szavakat tartalmaznak, amiket a program javasolhat ha valaki elgépel egy parancsot (Autocorrect)
     //A parancsok listája egy tömbben
-    private String[] acParancsok = new String[] {"letrehoz", "lep", "osszekot", "szerel", "lyukaszt", "allit", "frissit", "epit", "felvesz", "allapot", "tolt", "csuszik", "ragad", "veletlen", "elront", "termel", "csofelulet", "vizmennyiseg", "torol"};
+    private final String[] acParancsok = new String[] {
+            LocalizationHun.STR_CREATE, 
+            LocalizationHun.STR_STEP, 
+            LocalizationHun.STR_CONNECT,
+            LocalizationHun.STR_FIX,
+            LocalizationHun.STR_PUNCTURE,
+            LocalizationHun.STR_CALIBRATE,
+            LocalizationHun.STR_UPDATE,
+            LocalizationHun.STR_BUILD,
+            LocalizationHun.STR_PICKUP,
+            LocalizationHun.STR_STATUS,
+            LocalizationHun.STR_FILL,
+            LocalizationHun.STR_SLIPPERY,
+            LocalizationHun.STR_STICKY,
+            LocalizationHun.STR_RANDOM,
+            LocalizationHun.STR_BREAK,
+            LocalizationHun.STR_PRODUCE,
+            LocalizationHun.STR_PIPESURFACE,
+            LocalizationHun.STR_WATERAMOUNT,
+            LocalizationHun.STR_DELETE
+    };
     //Létrehozható elemek listája egy tömbben
-    private String[] acElemek = new String[] {"cso", "pumpa", "ciszterna", "forras", "szerelo", "szabotor"};
+    private final String[] acElemek = new String[] {
+            LocalizationHun.STR_PIPE,
+            LocalizationHun.STR_PUMP,
+            LocalizationHun.STR_CISTERN,
+            LocalizationHun.STR_SOURCE,
+            LocalizationHun.STR_MECHANIC,
+            LocalizationHun.STR_SABOTEUR
+    };
 
 
     /**
@@ -114,7 +141,7 @@ public class ParancsErtelmezo {
                 parancsok.add(line);
             }
         } catch (IOException ioe) {
-            System.out.println("Hiba a fájl beolvasásakor! ("+ ioe.toString() + ")");
+            System.out.println("Hiba a fájl beolvasásakor! ("+ ioe + ")");
         }
 
         parseAll(parancsok);
@@ -186,69 +213,69 @@ public class ParancsErtelmezo {
 
         switch (parancs)
         {
-            case "letrehoz":
+            case LocalizationHun.STR_CREATE:
                 if (InDebugMode())
                     cLetrehoz(param);
                 break;
-            case "lep":
+            case LocalizationHun.STR_STEP:
                 cLepes(param);
                 break;
-            case "osszekot":
+            case LocalizationHun.STR_CONNECT:
                 if (InDebugMode())
                     cOsszekot(param);
                 break;
-            case "szerel":
+            case LocalizationHun.STR_FIX:
                 cSzerel(param);
                 break;
-            case "lyukaszt":
+            case LocalizationHun.STR_PUNCTURE:
                 cLyukaszt(param);
                 break;
-            case "allit":
+            case LocalizationHun.STR_CALIBRATE:
                 cAllit(param);
                 break;
-            case "frissit":
+            case LocalizationHun.STR_UPDATE:
                 cFrissit(param);
                 break;
-            case "epit":
+            case LocalizationHun.STR_BUILD:
                 cEpit(param);
                 break;
-            case "felvesz":
+            case LocalizationHun.STR_PICKUP:
                 cFelvesz(param);
                 break;
-            case "allapot":
+            case LocalizationHun.STR_STATUS:
                 cAllapot(param);
                 break;
-            case "tolt":
+            case LocalizationHun.STR_FILL:
                 if (InDebugMode())
                     cTolt(param);
                 break;
-            case "csuszik":
+            case LocalizationHun.STR_SLIPPERY:
                 cCsuszik(param);
                 break;
-            case "ragad":
+            case LocalizationHun.STR_STICKY:
                 cRagad(param);
                 break;
-            case "veletlen":
+            case LocalizationHun.STR_RANDOM:
                 if (InDebugMode())
                     cVeletlen(param);
                 break;
-            case "elront":
+            case LocalizationHun.STR_BREAK:
                 if (InDebugMode())
                     cElront(param);
                 break;
-            case "termel":
+            case LocalizationHun.STR_PRODUCE:
                 if (InDebugMode())
                     cTermel(param);
                 break;
-            case "csofelulet":
+            case LocalizationHun.STR_PIPESURFACE:
                 if (InDebugMode())
                     cCsofelulet(param);
                 break;
-            case "vizmennyiseg":
+            case LocalizationHun.STR_WATERAMOUNT:
                 if (InDebugMode())
                     cVizmennyiseg(param);
                 break;
-            case "torol":
+            case LocalizationHun.STR_DELETE:
                 if (InDebugMode())
                     cTorol(param);
                 break;
@@ -285,10 +312,10 @@ public class ParancsErtelmezo {
         //Megnézzük hogy milyen típusú elemet kell létrehozni
         switch (param[0])
         {
-            case "cso":
+            case LocalizationHun.STR_PIPE:
                 //Megnézzük hogy létezik-e már ilyen nevű elem
                 if (mezoMap.containsKey(param[1]) || jatekosMap.containsKey(param[1])) {
-                    Outputln("Már létezik ilyen nevű elem");
+                    Outputln(LocalizationHun.STR_ELEMENT_NAME_CONFLICT);
                     break;
                 }
                 //Létrehozzuk a csövet
@@ -300,10 +327,10 @@ public class ParancsErtelmezo {
                 if(success_message) Outputln("A " + param[1] + " nevű cső létrehozása sikeres volt!");
                 break;
 
-            case "pumpa":
+            case LocalizationHun.STR_PUMP:
                 //Megnézzük hogy létezik-e már ilyen nevű elem
                 if (mezoMap.containsKey(param[1]) || jatekosMap.containsKey(param[1])) {
-                    Outputln("Már létezik ilyen nevű elem");
+                    Outputln(LocalizationHun.STR_ELEMENT_NAME_CONFLICT);
                     break;
                 }
                 //Létrehozzuk a pumpát
@@ -315,10 +342,10 @@ public class ParancsErtelmezo {
                 if(success_message) Outputln("A " + param[1] + " nevű pumpa létrehozása sikeres volt!");
                 break;
 
-            case "ciszterna":
+            case LocalizationHun.STR_CISTERN:
                 //Megnézzük hogy létezik-e már ilyen nevű elem
                 if (mezoMap.containsKey(param[1]) || jatekosMap.containsKey(param[1])) {
-                    Outputln("Már létezik ilyen nevű elem");
+                    Outputln(LocalizationHun.STR_ELEMENT_NAME_CONFLICT);
                     break;
                 }
                 //Létrehozzuk a ciszternát
@@ -330,10 +357,10 @@ public class ParancsErtelmezo {
                 if(success_message) Outputln("A " + param[1] + " nevű ciszterna létrehozása sikeres volt!");
                 break;
 
-            case "forras":
+            case LocalizationHun.STR_SOURCE:
                 //Megnézzük hogy létezik-e már ilyen nevű elem
                 if (mezoMap.containsKey(param[1]) || jatekosMap.containsKey(param[1])) {
-                    Outputln("Már létezik ilyen nevű elem");
+                    Outputln(LocalizationHun.STR_ELEMENT_NAME_CONFLICT);
                     break;
                 }
                 //Létrehozzuk a forrást
@@ -345,10 +372,10 @@ public class ParancsErtelmezo {
                 if(success_message) Outputln("A " + param[1] + " nevű forrás létrehozása sikeres volt!");
                 break;
 
-            case "szerelo":
+            case LocalizationHun.STR_MECHANIC:
                 //Megnézzük hogy létezik-e már ilyen nevű elem
                 if (jatekosMap.containsKey(param[1]) || mezoMap.containsKey(param[1])) {
-                    Outputln("Már létezik ilyen nevű elem");
+                    Outputln(LocalizationHun.STR_ELEMENT_NAME_CONFLICT);
                     break;
                 }
                 //Létrehozzuk a szerelőt
@@ -359,10 +386,10 @@ public class ParancsErtelmezo {
                 if(success_message) Outputln("A " + param[1] + " nevű szerelő létrehozása sikeres volt!");
                 break;
 
-            case "szabotor":
+            case LocalizationHun.STR_SABOTEUR:
                 //Megnézzük hogy létezik-e már ilyen nevű elem
                 if (jatekosMap.containsKey(param[1]) || mezoMap.containsKey(param[1])) {
-                    Outputln("Már létezik ilyen nevű elem");
+                    Outputln(LocalizationHun.STR_ELEMENT_NAME_CONFLICT);
                     break;
                 }
                 //Létrehozzuk a szabotőrt
@@ -375,7 +402,7 @@ public class ParancsErtelmezo {
 
             default:
                 Outputln("Hibás paramétert adtál meg! (" + param[0] + ") A lehetőségek a következők: ”cso”/”pumpa”/”ciszterna”/”forras”/”szerelo”/”szabotor”");
-                Autocorrect("letrehoz", param, acElemek, 1);
+                Autocorrect(LocalizationHun.STR_CREATE, param, acElemek, 1);
                 break;
         }
     }
@@ -393,14 +420,14 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("lep", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_STEP, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy létezik-e a megadott mező
         if (!mezoMap.containsKey(param[1])) {
-            Outputln("Nincs ilyen nevű mező: " + param[1]);
-            Autocorrect("lep", param, mezoMap.keySet().toArray(new String[0]), 2);
+            Outputln(LocalizationHun.STR_FIELD_DOESNT_EXIST + param[1]);
+            Autocorrect(LocalizationHun.STR_STEP, param, mezoMap.keySet().toArray(new String[0]), 2);
             return;
         }
         //Léptetjük a játékost a megadott mezőre
@@ -420,14 +447,14 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott 1. mező
         if (!mezoMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű mező: " + param[0]);
-            Autocorrect("osszekot", param, mezoMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_FIELD_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_CONNECT, param, mezoMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy létezik-e a megadott 2. mező
         if (!mezoMap.containsKey(param[1])) {
-            Outputln("Nincs ilyen nevű mező: " + param[1]);
-            Autocorrect("osszekot", param, mezoMap.keySet().toArray(new String[0]), 2);
+            Outputln(LocalizationHun.STR_FIELD_DOESNT_EXIST + param[1]);
+            Autocorrect(LocalizationHun.STR_CONNECT, param, mezoMap.keySet().toArray(new String[0]), 2);
             return;
         }
         //Összekötjük a két mezőt
@@ -449,8 +476,8 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("szerel", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_FIX, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Javítunk az adott szerelővel
@@ -470,8 +497,8 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("lyukaszt", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_PUNCTURE, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Lyukasztunk az adott szabotőrrel
@@ -491,20 +518,20 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("allit", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_CALIBRATE, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy létezik-e a megadott bemeneti mező
         if (!mezoMap.containsKey(param[1])) {
-            Outputln("Nincs ilyen nevű mező: " + param[1]);
-            Autocorrect("allit", param, mezoMap.keySet().toArray(new String[0]), 2);
+            Outputln(LocalizationHun.STR_FIELD_DOESNT_EXIST + param[1]);
+            Autocorrect(LocalizationHun.STR_CALIBRATE, param, mezoMap.keySet().toArray(new String[0]), 2);
             return;
         }
         //Megnézzük hogy létezik-e a megadott kimeneti mező
         if (!mezoMap.containsKey(param[2])) {
-            Outputln("Nincs ilyen nevű mező: " + param[2]);
-            Autocorrect("allit", param, mezoMap.keySet().toArray(new String[0]), 3);
+            Outputln(LocalizationHun.STR_FIELD_DOESNT_EXIST + param[2]);
+            Autocorrect(LocalizationHun.STR_CALIBRATE, param, mezoMap.keySet().toArray(new String[0]), 3);
             return;
         }
         //Atállítjuk a pumpát
@@ -556,18 +583,18 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("epit", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_BUILD, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy a második paraméter "pumpa" vagy "cso"
-        if (!param[1].equals("pumpa") && !param[1].equals("cso")) {
+        if (!param[1].equals(LocalizationHun.STR_PUMP) && !param[1].equals(LocalizationHun.STR_PIPE)) {
             Outputln("A második paraméternek \"pumpa\" vagy \"cso\"-nak kell lennie.");
-            Autocorrect("epit", param, new String[]{"pumpa", "cso"}, 2);
+            Autocorrect(LocalizationHun.STR_BUILD, param, new String[]{LocalizationHun.STR_PUMP, LocalizationHun.STR_PIPE}, 2);
             return;
         }
         //Ha "pumpa"-t adtak meg, akkor pumpát építünk
-        if (param[1].equals("pumpa")) {
+        if (param[1].equals(LocalizationHun.STR_PUMP)) {
             jatekosMap.get(param[0]).PumpatEpit();
         }
         //Ha "cso"-t adtak meg, akkor csövet építünk
@@ -595,18 +622,18 @@ public class ParancsErtelmezo {
 
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("felvesz", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_PICKUP, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy a második paraméter "pumpa" vagy "cso"
-        if (!param[1].equals("pumpa") && !param[1].equals("cso")) {
+        if (!param[1].equals(LocalizationHun.STR_PUMP) && !param[1].equals(LocalizationHun.STR_PIPE)) {
             Outputln("A második paraméternek \"pumpa\" vagy \"cso\"-nak kell lennie.");
-            Autocorrect("felvesz", param, new String[]{"pumpa", "cso"}, 2);
+            Autocorrect(LocalizationHun.STR_PICKUP, param, new String[]{LocalizationHun.STR_PUMP, LocalizationHun.STR_PIPE}, 2);
             return;
         }
         //Ha "pumpa"-t adtak meg, akkor pumpát veszünk fel
-        if (param[1].equals("pumpa")) {
+        if (param[1].equals(LocalizationHun.STR_PUMP)) {
             jatekosMap.get(param[0]).PumpatFelvesz();
             //Ha több paramétert adtak meg, akkor figyelmeztetjük a felhasználót, de a parancs lefut
             if (param.length > 2) {
@@ -623,18 +650,18 @@ public class ParancsErtelmezo {
         //Megnézzük hogy létezik-e a megadott cső
         if (!mezoMap.containsKey(param[2])) {
             Outputln("Nincs ilyen nevű cső: " + param[2]);
-            Autocorrect("felvesz", param, mezoMap.keySet().toArray(new String[0]), 3);
+            Autocorrect(LocalizationHun.STR_PICKUP, param, mezoMap.keySet().toArray(new String[0]), 3);
             return;
         }
         //Ha a cső felét akarjuk felvenni, akkor azt is meg kell adni
-        if (param.length == 4 && !param[3].equals("egesz") && !param[3].equals("fel")) {
+        if (param.length == 4 && !param[3].equals(LocalizationHun.STR_WHOLE) && !param[3].equals("fel")) {
             Outputln("A cső felvételéhez az utolsó paraméternek \"egesz\" vagy \"fel\"-nek kell lennie. Az is lehet, hogy nem adunk meg semmit, ekkor az egészet vesszük fel.");
-            Autocorrect("felvesz", param, new String[]{"egesz", "fel"}, 4);
+            Autocorrect(LocalizationHun.STR_PICKUP, param, new String[]{LocalizationHun.STR_WHOLE, "fel"}, 4);
             return;
         }
         boolean egeszetVeszunkFel;
         if (param.length == 4) {
-            egeszetVeszunkFel = param[3].equals("egesz");
+            egeszetVeszunkFel = param[3].equals(LocalizationHun.STR_WHOLE);
         }
         else{
             egeszetVeszunkFel = true;
@@ -687,11 +714,11 @@ public class ParancsErtelmezo {
                 for (Mezo m : mezoMap.values()) {
                     if (param.length == 3)
                     {
-                        runFromString("allapot " + getMezoName(m) + " * " + param[2]);
+                        runFromString(LocalizationHun.STR_STATUS + " " + getMezoName(m) + " * " + param[2]);
                     }
                     else
                     {
-                        runFromString("allapot " + getMezoName(m) + " *");
+                        runFromString(LocalizationHun.STR_STATUS + " " + getMezoName(m) + " *");
                     }
                     PrintOrWrite("", file, fileName);
                 }
@@ -700,11 +727,11 @@ public class ParancsErtelmezo {
 
                     if (param.length == 3)
                     {
-                        runFromString("allapot " + getJatekosName(j) + " * " + param[2]);
+                        runFromString(LocalizationHun.STR_STATUS + " " + getJatekosName(j) + " * " + param[2]);
                     }
                     else
                     {
-                        runFromString("allapot " + getJatekosName(j) + " *");
+                        runFromString(LocalizationHun.STR_STATUS + " " + getJatekosName(j) + " *");
                     }
                     PrintOrWrite("", file, fileName);
                 }
@@ -727,41 +754,40 @@ public class ParancsErtelmezo {
             switch (param[1])
             {
                 case "maxhatizsakkapacitas":
-                    PrintOrWrite(param[0] + " maxHatizsakKapacitas: " + jatekosMap.get(param[0]).getMaxHatizsakKapacitas(), file, fileName);
-                    allapotString += param[0] + " maxHatizsakKapacitas: " + jatekosMap.get(param[0]).getMaxHatizsakKapacitas() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_MAX_BACKPACK_CAPACITY + jatekosMap.get(param[0]).getMaxHatizsakKapacitas(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_MAX_BACKPACK_CAPACITY + jatekosMap.get(param[0]).getMaxHatizsakKapacitas() + "\n";
                     break;
                 case "pumpahatizsak":
-                    PrintOrWrite(param[0] + " pumpaHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()), file, fileName);
-                    allapotString += param[0] + " pumpaHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()) + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_PUMP_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_PUMP_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()) + "\n";
                     break;
                 case "csohatizsak":
-                    PrintOrWrite(param[0] + " csoHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()), file, fileName);
-                    allapotString += param[0] + " csoHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()) + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_PIPE_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_PIPE_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()) + "\n";
                     break;
                 case "helyzet":
                     if (jatekosMap.get(param[0]).getHelyzet() != null)
                     {
-                        PrintOrWrite(param[0] + " helyzet: " + getMezoName(jatekosMap.get(param[0]).getHelyzet()), file, fileName);
-                        allapotString += param[0] + " helyzet: " + getMezoName(jatekosMap.get(param[0]).getHelyzet()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_POSITION + getMezoName(jatekosMap.get(param[0]).getHelyzet()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_POSITION + getMezoName(jatekosMap.get(param[0]).getHelyzet()) + "\n";
                     }
                     break;
                 case "*":
-                    PrintOrWrite(param[0] + " maxHatizsakKapacitas: " + jatekosMap.get(param[0]).getMaxHatizsakKapacitas(), file, fileName);
-                    allapotString += param[0] + " maxHatizsakKapacitas: " + jatekosMap.get(param[0]).getMaxHatizsakKapacitas() + "\n";
-                    PrintOrWrite(param[0] + " pumpaHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()), file, fileName);
-                    allapotString += param[0] + " pumpaHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()) + "\n";
-                    PrintOrWrite(param[0] + " csoHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()), file, fileName);
-                    allapotString += param[0] + " csoHatizsak: " + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()) + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_MAX_BACKPACK_CAPACITY + jatekosMap.get(param[0]).getMaxHatizsakKapacitas(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_MAX_BACKPACK_CAPACITY + jatekosMap.get(param[0]).getMaxHatizsakKapacitas() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_PUMP_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_PUMP_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getPumpaHatizsak()) + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_PIPE_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_PIPE_BACKPACK + getMezoListName(jatekosMap.get(param[0]).getCsoHatizsak()) + "\n";
                     if (jatekosMap.get(param[0]).getHelyzet() != null)
                     {
-                        PrintOrWrite(param[0] + " helyzet: " + getMezoName(jatekosMap.get(param[0]).getHelyzet()), file, fileName);
-                        allapotString += param[0] + " helyzet: " + getMezoName(jatekosMap.get(param[0]).getHelyzet()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_POSITION + getMezoName(jatekosMap.get(param[0]).getHelyzet()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_POSITION + getMezoName(jatekosMap.get(param[0]).getHelyzet()) + "\n";
                     }
                     break;
                 default:
                     Outputln("Nincs ilyen attribútum: " + param[1]);
-                    Autocorrect("allapot", param, new String[]{"maxhatizsakkapacitas", "pumpahatizsak", "csohatizsak", "helyzet", "*"}, 2);
-                    return;
+                    Autocorrect(LocalizationHun.STR_STATUS, param, new String[]{"maxhatizsakkapacitas", "pumpahatizsak", "csohatizsak", "helyzet", "*"}, 2);
 
             }
         }
@@ -770,138 +796,137 @@ public class ParancsErtelmezo {
             switch(param[1])
             {
                 case "mukodik":
-                    PrintOrWrite(param[0] + " mukodik: " + mezoMap.get(param[0]).getMukodik(), file, fileName);
-                    allapotString += param[0] + " mukodik: " + mezoMap.get(param[0]).getMukodik() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_WORKING_S + mezoMap.get(param[0]).getMukodik(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_WORKING_S + mezoMap.get(param[0]).getMukodik() + "\n";
                     break;
                 case "szomszedok":
                     if (mezoMap.get(param[0]).GetSzomszedok() != null)
                     {
-                        PrintOrWrite(param[0] + " szomszedok: " + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()), file, fileName);
-                        allapotString += param[0] + " szomszedok: " + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_NEIGHBOURS_S + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_NEIGHBOURS_S + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()) + "\n";
                     }
                     break;
                 case "maxjatekosok":
-                    PrintOrWrite(param[0] + " maxJatekosok: " + mezoMap.get(param[0]).getMaxJatekosok(), file, fileName);
-                    allapotString += param[0] + " maxJatekosok: " + mezoMap.get(param[0]).getMaxJatekosok() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_MAX_PLAYERS_S + mezoMap.get(param[0]).getMaxJatekosok(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_MAX_PLAYERS_S + mezoMap.get(param[0]).getMaxJatekosok() + "\n";
                     break;
                 case "maxszomszedok":
-                    PrintOrWrite(param[0] + " maxSzomszedok: " + mezoMap.get(param[0]).getMaxSzomszedok(), file, fileName);
-                    allapotString += param[0] + " maxSzomszedok: " + mezoMap.get(param[0]).getMaxSzomszedok() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_MAX_NEIGHBOURS_S + mezoMap.get(param[0]).getMaxSzomszedok(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_MAX_NEIGHBOURS_S + mezoMap.get(param[0]).getMaxSzomszedok() + "\n";
                     break;
                 case "jatekosok":
-                    PrintOrWrite(param[0] + " jatekosok: " + getJatekosListName(mezoMap.get(param[0]).getJatekosok()), file, fileName);
-                    allapotString += param[0] + " jatekosok: " + getJatekosListName(mezoMap.get(param[0]).getJatekosok()) + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_PLAYERS_S + getJatekosListName(mezoMap.get(param[0]).getJatekosok()), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_PLAYERS_S + getJatekosListName(mezoMap.get(param[0]).getJatekosok()) + "\n";
                     break;
-                case "vizmennyiseg":
-                    PrintOrWrite(param[0] + " vizmennyiseg: " + mezoMap.get(param[0]).getVizmennyiseg(), file, fileName);
-                    allapotString += param[0] + " vizmennyiseg: " + mezoMap.get(param[0]).getVizmennyiseg() + "\n";
+                case LocalizationHun.STR_WATERAMOUNT:
+                    PrintOrWrite(param[0] + LocalizationHun.STR_WATERAMOUNT_S + mezoMap.get(param[0]).getVizmennyiseg(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_WATERAMOUNT_S + mezoMap.get(param[0]).getVizmennyiseg() + "\n";
                     break;
                 case "lyukcooldown":
                     if (mezoMap.get(param[0]).getLyukCooldown() != -1)
                     {
-                        PrintOrWrite(param[0] + " lyukCooldown: " + mezoMap.get(param[0]).getLyukCooldown(), file, fileName);
-                        allapotString += param[0] + " lyukCooldown: " + mezoMap.get(param[0]).getLyukCooldown() + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_HOLE_COOLDOWN_S + mezoMap.get(param[0]).getLyukCooldown(), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_HOLE_COOLDOWN_S + mezoMap.get(param[0]).getLyukCooldown() + "\n";
                     }
                     break;
                 case "csuszos":
                     if (mezoMap.get(param[0]).getCsuszos() != -1)
                     {
-                        PrintOrWrite(param[0] + " csuszos: " + mezoMap.get(param[0]).getCsuszos(), file, fileName);
-                        allapotString += param[0] + " csuszos: " + mezoMap.get(param[0]).getCsuszos() + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_SLIPPERY_S + mezoMap.get(param[0]).getCsuszos(), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_SLIPPERY_S + mezoMap.get(param[0]).getCsuszos() + "\n";
                     }
                     break;
                 case "ragados":
                     if (mezoMap.get(param[0]).getRagados() != -1)
                     {
-                        PrintOrWrite(param[0] + " ragados: " + mezoMap.get(param[0]).getRagados(), file, fileName);
-                        allapotString += param[0] + " ragados: " + mezoMap.get(param[0]).getRagados() + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_STICKY_S + mezoMap.get(param[0]).getRagados(), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_STICKY_S + mezoMap.get(param[0]).getRagados() + "\n";
                     }
                     break;
                 case "ragadossatette":
                     if (mezoMap.get(param[0]).getRagadossaTette() != null)
                     {
-                        PrintOrWrite(param[0] + " ragadossaTette: " + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()), file, fileName);
-                        allapotString += param[0] + " ragadossaTette: " + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_MADE_STICKY_S + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_MADE_STICKY_S + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()) + "\n";
                     }
                     break;
                 case "termeltpumpak":
                     if (mezoMap.get(param[0]).getTermeltPumpak() != null)
                     {
-                        PrintOrWrite(param[0] + " termeltPumpak: " + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()), file, fileName);
-                        allapotString += param[0] + " termeltPumpak: " + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_SPAWNED_PUMPS_S + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_SPAWNED_PUMPS_S + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()) + "\n";
                     }
                     break;
                 case "bemenet":
                     if (mezoMap.get(param[0]).getBemenet() != null)
                     {
-                        PrintOrWrite(param[0] + " bemenet: " + getMezoName(mezoMap.get(param[0]).getBemenet()), file, fileName);
-                        allapotString += param[0] + " bemenet: " + getMezoName(mezoMap.get(param[0]).getBemenet()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_INPUT_S + getMezoName(mezoMap.get(param[0]).getBemenet()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_INPUT_S + getMezoName(mezoMap.get(param[0]).getBemenet()) + "\n";
                     }
                     break;
                 case "kimenet":
                     if (mezoMap.get(param[0]).getKimenet() != null)
                     {
-                        PrintOrWrite(param[0] + " kimenet: " + getMezoName(mezoMap.get(param[0]).getKimenet()), file, fileName);
-                        allapotString += param[0] + " kimenet: " + getMezoName(mezoMap.get(param[0]).getKimenet()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_OUTPUT_S + getMezoName(mezoMap.get(param[0]).getKimenet()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_OUTPUT_S + getMezoName(mezoMap.get(param[0]).getKimenet()) + "\n";
                     }
                     break;
                 case "*":
-                    PrintOrWrite(param[0] + " mukodik: " + mezoMap.get(param[0]).getMukodik(), file, fileName);
-                    allapotString += param[0] + " mukodik: " + mezoMap.get(param[0]).getMukodik() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_WORKING_S + mezoMap.get(param[0]).getMukodik(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_WORKING_S + mezoMap.get(param[0]).getMukodik() + "\n";
                     if (mezoMap.get(param[0]).GetSzomszedok() != null)
                     {
-                        PrintOrWrite(param[0] + " szomszedok: " + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()), file, fileName);
-                        allapotString += param[0] + " szomszedok: " + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_NEIGHBOURS_S + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_NEIGHBOURS_S + getMezoListName(mezoMap.get(param[0]).GetSzomszedok()) + "\n";
                     }
-                    PrintOrWrite(param[0] + " maxJatekosok: " + mezoMap.get(param[0]).getMaxJatekosok(), file, fileName);
-                    allapotString += param[0] + " maxJatekosok: " + mezoMap.get(param[0]).getMaxJatekosok() + "\n";
-                    PrintOrWrite(param[0] + " maxSzomszedok: " + mezoMap.get(param[0]).getMaxSzomszedok(), file, fileName);
-                    allapotString += param[0] + " maxSzomszedok: " + mezoMap.get(param[0]).getMaxSzomszedok() + "\n";
-                    PrintOrWrite(param[0] + " jatekosok: " + getJatekosListName(mezoMap.get(param[0]).getJatekosok()), file, fileName);
-                    allapotString += param[0] + " jatekosok: " + getJatekosListName(mezoMap.get(param[0]).getJatekosok()) + "\n";
-                    PrintOrWrite(param[0] + " vizmennyiseg: " + mezoMap.get(param[0]).getVizmennyiseg(), file, fileName);
-                    allapotString += param[0] + " vizmennyiseg: " + mezoMap.get(param[0]).getVizmennyiseg() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_MAX_PLAYERS_S + mezoMap.get(param[0]).getMaxJatekosok(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_MAX_PLAYERS_S + mezoMap.get(param[0]).getMaxJatekosok() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_MAX_NEIGHBOURS_S + mezoMap.get(param[0]).getMaxSzomszedok(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_MAX_NEIGHBOURS_S + mezoMap.get(param[0]).getMaxSzomszedok() + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_PLAYERS_S + getJatekosListName(mezoMap.get(param[0]).getJatekosok()), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_PLAYERS_S + getJatekosListName(mezoMap.get(param[0]).getJatekosok()) + "\n";
+                    PrintOrWrite(param[0] + LocalizationHun.STR_WATERAMOUNT_S + mezoMap.get(param[0]).getVizmennyiseg(), file, fileName);
+                    allapotString += param[0] + LocalizationHun.STR_WATERAMOUNT_S + mezoMap.get(param[0]).getVizmennyiseg() + "\n";
                     if (mezoMap.get(param[0]).getLyukCooldown() != -1)
                     {
-                        PrintOrWrite(param[0] + " lyukCooldown: " + mezoMap.get(param[0]).getLyukCooldown(), file, fileName);
-                        allapotString += param[0] + " lyukCooldown: " + mezoMap.get(param[0]).getLyukCooldown() + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_HOLE_COOLDOWN_S + mezoMap.get(param[0]).getLyukCooldown(), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_HOLE_COOLDOWN_S + mezoMap.get(param[0]).getLyukCooldown() + "\n";
                     }
                     if (mezoMap.get(param[0]).getCsuszos() != -1)
                     {
-                        PrintOrWrite(param[0] + " csuszos: " + mezoMap.get(param[0]).getCsuszos(), file, fileName);
-                        allapotString += param[0] + " csuszos: " + mezoMap.get(param[0]).getCsuszos() + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_SLIPPERY_S + mezoMap.get(param[0]).getCsuszos(), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_SLIPPERY_S + mezoMap.get(param[0]).getCsuszos() + "\n";
                     }
                     if (mezoMap.get(param[0]).getRagados() != -1)
                     {
-                        PrintOrWrite(param[0] + " ragados: " + mezoMap.get(param[0]).getRagados(), file, fileName);
-                        allapotString += param[0] + " ragados: " + mezoMap.get(param[0]).getRagados() + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_STICKY_S + mezoMap.get(param[0]).getRagados(), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_STICKY_S + mezoMap.get(param[0]).getRagados() + "\n";
                     }
                     if (mezoMap.get(param[0]).getRagadossaTette() != null)
                     {
-                        PrintOrWrite(param[0] + " ragadossaTette: " + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()), file, fileName);
-                        allapotString += param[0] + " ragadossaTette: " + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_MADE_STICKY_S + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_MADE_STICKY_S + getJatekosName(mezoMap.get(param[0]).getRagadossaTette()) + "\n";
                     }
                     if (mezoMap.get(param[0]).getTermeltPumpak() != null)
                     {
-                        PrintOrWrite(param[0] + " termeltPumpak: " + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()), file, fileName);
-                        allapotString += param[0] + " termeltPumpak: " + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_SPAWNED_PUMPS_S + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_SPAWNED_PUMPS_S + getMezoListName(mezoMap.get(param[0]).getTermeltPumpak()) + "\n";
                     }
                     if (mezoMap.get(param[0]).getBemenet() != null)
                     {
-                        PrintOrWrite(param[0] + " bemenet: " + getMezoName(mezoMap.get(param[0]).getBemenet()), file, fileName);
-                        allapotString += param[0] + " bemenet: " + getMezoName(mezoMap.get(param[0]).getBemenet()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_INPUT_S + getMezoName(mezoMap.get(param[0]).getBemenet()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_INPUT_S + getMezoName(mezoMap.get(param[0]).getBemenet()) + "\n";
                     }
                     if (mezoMap.get(param[0]).getKimenet() != null)
                     {
-                        PrintOrWrite(param[0] + " kimenet: " + getMezoName(mezoMap.get(param[0]).getKimenet()), file, fileName);
-                        allapotString += param[0] + " kimenet: " + getMezoName(mezoMap.get(param[0]).getKimenet()) + "\n";
+                        PrintOrWrite(param[0] + LocalizationHun.STR_OUTPUT_S + getMezoName(mezoMap.get(param[0]).getKimenet()), file, fileName);
+                        allapotString += param[0] + LocalizationHun.STR_OUTPUT_S + getMezoName(mezoMap.get(param[0]).getKimenet()) + "\n";
                     }
 
                     break;
                 default:
                     Outputln("Nincs ilyen attribútum: " + param[1]);
-                    Autocorrect("allapot", param, new String[]{"nev", "maxjatekosok", "maxszomszedok", "jatekosok", "vizmennyiseg", "lyukcooldown", "csuszos", "ragados", "ragadossatette", "termeltpumpak", "bemenet", "kimenet", "*"}, 2);
-                    return;
+                    Autocorrect(LocalizationHun.STR_STATUS, param, new String[]{"nev", "maxjatekosok", "maxszomszedok", "jatekosok", LocalizationHun.STR_WATERAMOUNT, "lyukcooldown", "csuszos", "ragados", "ragadossatette", "termeltpumpak", "bemenet", "kimenet", "*"}, 2);
             }
         }
         else {
@@ -911,8 +936,7 @@ public class ParancsErtelmezo {
             ComboMap.putAll(jatekosMap);
             ComboMap.putAll(mezoMap);
 
-            Autocorrect("allapot", param, ComboMap.keySet().toArray(new String[0]), 1);
-            return;
+            Autocorrect(LocalizationHun.STR_STATUS, param, ComboMap.keySet().toArray(new String[0]), 1);
         }
 
     }
@@ -951,8 +975,8 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("csuszik", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_SLIPPERY, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Csúszóssá tesszük a játékos által elfoglalt mezőt
@@ -972,8 +996,8 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott játékos
         if (!jatekosMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű játékos: " + param[0]);
-            Autocorrect("ragad", param, jatekosMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_PLAYER_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_STICKY, param, jatekosMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Ragadóssá tesszük a játékos által elfoglalt mezőt
@@ -1001,7 +1025,7 @@ public class ParancsErtelmezo {
         }
         else {
             Outputln("Hibás paraméter. A paraméternek \"be\" vagy \"ki\"-nek kell lennie.");
-            Autocorrect("veletlen", param, new String[]{"be", "ki"}, 1);
+            Autocorrect(LocalizationHun.STR_RANDOM, param, new String[]{"be", "ki"}, 1);
         }
     }
 
@@ -1018,8 +1042,8 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott mező
         if (!mezoMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű mező: " + param[0]);
-            Autocorrect("elront", param, mezoMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_FIELD_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_BREAK, param, mezoMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Elrontjuk a megadott mezőt
@@ -1040,18 +1064,18 @@ public class ParancsErtelmezo {
         }
         //Megnézzük hogy létezik-e a megadott mező
         if (!mezoMap.containsKey(param[0])) {
-            Outputln("Nincs ilyen nevű mező: " + param[0]);
-            Autocorrect("termel", param, mezoMap.keySet().toArray(new String[0]), 1);
+            Outputln(LocalizationHun.STR_FIELD_DOESNT_EXIST + param[0]);
+            Autocorrect(LocalizationHun.STR_PRODUCE, param, mezoMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy a második paraméter "pumpa" vagy "cso"
-        if (!param[1].equals("pumpa") && !param[1].equals("cso")) {
+        if (!param[1].equals(LocalizationHun.STR_PUMP) && !param[1].equals(LocalizationHun.STR_PIPE)) {
             Outputln("Hibás paraméter. A paraméternek \"pumpa\" vagy \"cso\"-nak kell lennie.");
-            Autocorrect("termel", param, new String[]{"pumpa", "cso"}, 2);
+            Autocorrect(LocalizationHun.STR_PRODUCE, param, new String[]{LocalizationHun.STR_PUMP, LocalizationHun.STR_PIPE}, 2);
             return;
         }
         //Letermeljük a megfelelő objektumot
-        if (param[1].equals("pumpa")) {
+        if (param[1].equals(LocalizationHun.STR_PUMP)) {
             mezoMap.get(param[0]).PumpaKeszit();
         }
         else {
@@ -1075,13 +1099,13 @@ public class ParancsErtelmezo {
         //Megnézzük hogy létezik-e a megadott cső
         if (!mezoMap.containsKey(param[0])) {
             Outputln("Nincs ilyen nevű cső: " + param[0]);
-            Autocorrect("csofelulet", param, mezoMap.keySet().toArray(new String[0]), 1);
+            Autocorrect(LocalizationHun.STR_PIPESURFACE, param, mezoMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy a második paraméter "csuszos" vagy "ragados"
         if (!param[1].equals("csuszos") && !param[1].equals("ragados")) {
             Outputln("Hibás paraméter. A paraméternek \"csuszos\" vagy \"ragados\"-nak kell lennie.");
-            Autocorrect("csofelulet", param, new String[]{"csuszos", "ragados"}, 2);
+            Autocorrect(LocalizationHun.STR_PIPESURFACE, param, new String[]{"csuszos", "ragados"}, 2);
             return;
         }
         //Beállítjuk a megfelelő cső felületét
@@ -1107,7 +1131,7 @@ public class ParancsErtelmezo {
         //Megnézzük hogy létezik-e a megadott cső vagy pumpa
         if (!mezoMap.containsKey(param[0])) {
             Outputln("Nincs ilyen nevű cső vagy pumpa: " + param[0]);
-            Autocorrect("vizmennyiseg", param, mezoMap.keySet().toArray(new String[0]), 1);
+            Autocorrect(LocalizationHun.STR_WATERAMOUNT, param, mezoMap.keySet().toArray(new String[0]), 1);
             return;
         }
         //Megnézzük hogy a második paraméter szám-e
@@ -1490,7 +1514,6 @@ public class ParancsErtelmezo {
             //***Elvileg*** ilyen amúgy nem kéne hogy előforduljon, hogy egyszerre két cső is épüljön, de azért biztos ami biztos...
             //P.S. Ez amúgy valami undorító
             GiveNamesToThingsThatDontHaveNames();
-            return;
         }
 
 
