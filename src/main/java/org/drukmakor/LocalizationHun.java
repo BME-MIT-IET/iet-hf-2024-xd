@@ -1,6 +1,8 @@
 package org.drukmakor;
 
 public class LocalizationHun {
+
+    private LocalizationHun() {}
     public static final String STR_CREATE = "letrehoz";
     public static final String STR_STEP = "lep";
     public static final String STR_CONNECT = "osszekot";
