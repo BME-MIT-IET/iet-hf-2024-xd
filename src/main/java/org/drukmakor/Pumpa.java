@@ -178,7 +178,9 @@ public class Pumpa extends Mezo {
 			bemenet.VizetCsokkent(vizet_sziv);
 			vizmennyiseg += vizet_sziv;
 		}
-		catch (Exception ignored){}
+		catch (Exception ignored){
+			System.out.println("Error while updating pump");
+		}
 		view.NotifyField(this);
 	}
 
