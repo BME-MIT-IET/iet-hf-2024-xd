@@ -14,6 +14,7 @@ import static org.drukmakor.Main.pontsz;
 public class Ciszterna extends Mezo {
 
 	private ArrayList<Mezo> termeltpumpak;
+	private Random random = new Random();
 
 	public Ciszterna() {
 		super(Integer.MAX_VALUE);
@@ -39,10 +40,9 @@ public class Ciszterna extends Mezo {
 	 * szam intervallumban ha determinisztikus. Ha a randomizálás ki van kapcsolva akkor 1 pumpát termel.
 	 */
 	public void PumpaKeszit() {
-		Random rand = new Random();
 
 		//Generálunk egy random double-t 0 és 1 között
-		double randomNum = rand.nextDouble();
+		double randomNum = random.nextDouble();
 		if (!doRandomThings) // ha determinisztikus a mukodes
 			randomNum = 1; //Akkor garantaltan termel 1 pumpat
 		if (randomNum > 0.8) // egyébként 20% eséllyel termel pumpát
@@ -55,9 +55,8 @@ public class Ciszterna extends Mezo {
 	 * A ciszterna egy magához kapcsolódó szabad végű csövet hoz létre.
 	 */
 	public void CsovetKeszit() {
-		Random rand = new Random();
 		//Generálunk egy random double-t 0 és 1 között
-		double randomNum = rand.nextDouble();
+		double randomNum = random.nextDouble();
 		if (!doRandomThings) // ha determinisztikus a mukodes
 			randomNum = 1; //Akkor garantaltan termel 1 pumpat
 		if (randomNum > 0.8) // egyébként 20% eséllyel termel pumpát

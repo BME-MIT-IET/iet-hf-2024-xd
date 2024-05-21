@@ -125,13 +125,14 @@ public class ParancsErtelmezo {
      */
     public void runFromUser()
     {
+        BufferedReader br = null;
         //A konzolról olvasás
         try {
             System.out.print("Kérem a parancsot: ");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String line;
             while ((line = br.readLine()) != null) {
                 //Egyetlen parancsot tartalmazó arraylist (mivel a parse függvény arraylistet vár)
+            	br = new BufferedReader(new InputStreamReader(System.in));
                 ArrayList<String> parancsok = new ArrayList<String>(List.of(line));
                 parseAll(parancsok);
 
@@ -143,8 +144,20 @@ public class ParancsErtelmezo {
 
                 System.out.print("Kérem a parancsot: ");
             }
-        } catch (IOException ioe) {
+        } 
+        catch (IOException ioe) {
             ioe.printStackTrace();
+        } 
+        finally {
+            // this block will be executed in every case, success or caught exception
+            if (br != null) {
+                // again, a resource is involved, so try-catch another time
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -1185,7 +1198,13 @@ public class ParancsErtelmezo {
             }
         }
         //A tömb végén lévő érték lesz a távolság
-        return dp[m][n];
+        int l = dp.length;
+        int l0 = dp[0].length;
+        
+        if(m >= 0 && m < l && n >= 0 && n < l0 )
+        	return dp[m][n];
+        else 
+        	return 0;
     }
 
     /**
@@ -1406,15 +1425,28 @@ public class ParancsErtelmezo {
 
         if (fajlba)
         {
+        	FileWriter myWriter = null;
             try {
-                FileWriter myWriter = new FileWriter(filename, true);
+                myWriter = new FileWriter(filename, true);
                 myWriter.write(s);
                 myWriter.write("\n");
                 myWriter.close();
-            } catch (Exception e) {
+            } 
+            catch (Exception e) {
                 Outputln("Hiba a kimenet kiírásakor a(z) "+filename+" fájlba.");
                 //Hiba nevének kiírása
                 Outputln(e.toString());
+            }
+            finally {
+                // this block will be executed in every case, success or caught exception
+                if (myWriter != null) {
+                    // again, a resource is involved, so try-catch another time
+                    try {
+                    	myWriter.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         else
@@ -1608,4 +1640,3 @@ public class ParancsErtelmezo {
     	return lastfullcommand;
     }
 }
-

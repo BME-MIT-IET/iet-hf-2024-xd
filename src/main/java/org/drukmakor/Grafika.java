@@ -86,34 +86,33 @@ public class Grafika {
                 String path = JOptionPane.showInputDialog(frame, "Path: ");
                 //Megnézzük, hogy a filename végén van-e .txt, ha nincs, hozzáadjuk
 
-                if (path != null && !path.isEmpty())
-                {
-                    if (!path.endsWith(".txt")) {
-                        path += ".txt";
-                    }
-                    // File objektum létrehozása. Ez csak azért kell hogy ellenőrizzük, hogy létezik-e a fájl.
-                    File file = new File(path);
-
-                    // Ellenőrizzük, hogy létezik-e a fájl.
-                    if (file.exists() && file.isFile()) {
-                        p.EnableDebugMode(true);
-                        p.OutputToView(false);
-                        p.runFromString("torol");
-                        p.runFromFile(path);
-                        p.EnableDebugMode(false);
-                        p.OutputToView(true);
-                        drawPanel.repaint();
-                        if(alwaysdebug) {
-                            pe.EnableDebugMode(true);
-                        }
-                    } else {
-                        pe.ReceiveFromPE("File nem létezik.\n");
-                    }
-
-                }
-                else
+                if (!(path != null && !path.isEmpty()))
                 {
                     pe.ReceiveFromPE("Nem írtál be semmit.\n");
+                    return;
+                }
+
+                if (!path.endsWith(".txt")) {
+                    path += ".txt";
+                }
+                // File objektum létrehozása. Ez csak azért kell hogy ellenőrizzük, hogy létezik-e a fájl.
+                File file = new File(path);
+
+                // Ellenőrizzük, hogy létezik-e a fájl.
+                if (!(file.exists() && file.isFile())) {
+                    pe.ReceiveFromPE("File nem létezik.\n");
+                    return;
+                }
+
+                p.EnableDebugMode(true);
+                p.OutputToView(false);
+                p.runFromString("torol");
+                p.runFromFile(path);
+                p.EnableDebugMode(false);
+                p.OutputToView(true);
+                drawPanel.repaint();
+                if (alwaysdebug) {
+                    pe.EnableDebugMode(true);
                 }
             }
         });
@@ -210,35 +209,36 @@ public class Grafika {
         JButton send = new JButton("O.k.");
         send.addActionListener(e -> {
             String inp = input.getText();
-            if (inp.equals("dark")){
-                darkMode = true;
-                output.setBackground(new Color(80, 80, 80));
-                output.setForeground(new Color(255, 255, 255));
-                panel.setBackground(new Color(150, 150, 150));
-                drawPanel.repaint();
-                send.setBackground(new Color(100, 100, 100));
-                newGame.setBackground(new Color(100, 100, 100));
-                newUniqueGame.setBackground(new Color(100, 100, 100));
-                help.setBackground(new Color(100, 100, 100));
-                cantSee2.setBackground(new Color(100, 100, 100));
-                cantSee.setBackground(new Color(100, 100, 100));
-                input.setBackground(new Color(100, 100, 100));
+            switch (inp) {
+                case "dark":
+                    darkMode = true;
+                    output.setBackground(new Color(80, 80, 80));
+                    output.setForeground(new Color(255, 255, 255));
+                    panel.setBackground(new Color(150, 150, 150));
+                    drawPanel.repaint();
+                    send.setBackground(new Color(100, 100, 100));
+                    newGame.setBackground(new Color(100, 100, 100));
+                    newUniqueGame.setBackground(new Color(100, 100, 100));
+                    help.setBackground(new Color(100, 100, 100));
+                    cantSee2.setBackground(new Color(100, 100, 100));
+                    cantSee.setBackground(new Color(100, 100, 100));
+                    input.setBackground(new Color(100, 100, 100));
 
-            }
-            else if (inp.equals("Dune")) {
-                Fear = true;
-            }
-            else if (inp.equals("alwaysdebug"))
-            {
-                alwaysdebug = true;
-                p.EnableDebugMode(true);
-            }
-            else
-            {
-                pe.SendToPE(inp);
+                    break;
+                case "Dune":
+                    Fear = true;
+                    break;
+                case "alwaysdebug":
+                    alwaysdebug = true;
+                    p.EnableDebugMode(true);
+                    break;
+                default:
+                    pe.SendToPE(inp);
+                    break;
             }
             input.setText("");
         });
+
         //Ez azért kell, hogy az enterrel is lehessen küldeni parancsot
         ActionListener enterAction = new ActionListener() {
             @Override
@@ -281,7 +281,7 @@ public class Grafika {
 
         // Add the JScrollPane to the JFrame instead of the main panel
         frame.getContentPane().add(scrollPane2);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         frame.setSize(1000,1000);
         drawPanel.setMinimumSize(new Dimension(1000, 800));
         input.setMinimumSize(new Dimension(900, 20));
