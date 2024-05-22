@@ -16,12 +16,13 @@ public abstract class MezoView extends ObjectView {
 	 */
 	final int MAX_PLACEMENT_TRIALS = 5000;
 
+	private Random random = new Random();
+	
 	/**
 	 * A pálya elemeinek helyét ezzel a függvénnyel tudják a leszármazottak
 	 * legenerálni. Véletlenszerű helyet generál kicsit átfedési eséllyel.
 	 */
 	protected void GenerateXYPlacement(int minX, int maxX, int minY, int maxY, float minDistance) {
-		Random random = new Random();
 		ArrayList<ObjectView> views = ObjectView.GetAllViews();
 
 		// Mező helyének legenerálása, minden ütközés esetén újragenerálással

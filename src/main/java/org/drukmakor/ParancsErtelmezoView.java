@@ -13,7 +13,9 @@ public class ParancsErtelmezoView {
      * Default konstruktor. Parancsértelmezőt nem állít be. Akkor rendelődik a view egy parancsértelmezőhöz, ha a parancsértelmező beállítja ezt a viewt a magáénak.
      * (Mert ugye ParancsErtelmezo nélkül a view-nak nincs sok értelme.)
      */
-    public ParancsErtelmezoView() {}
+    public ParancsErtelmezoView() {
+    	// no need for ParancsErtelmezo init, implementation not required
+    }
     void setDrawpanel(JPanel drawpanel){
         this.drawpanel = drawpanel;
     }

@@ -281,7 +281,7 @@ public class Grafika {
 
         // Add the JScrollPane to the JFrame instead of the main panel
         frame.getContentPane().add(scrollPane2);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         frame.setSize(1000,1000);
         drawPanel.setMinimumSize(new Dimension(1000, 800));
         input.setMinimumSize(new Dimension(900, 20));

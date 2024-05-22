@@ -29,6 +29,7 @@ public class ForrasView extends MezoView {
 	 */
 	@Override
 	public void NotifyField(Mezo m) {
+		// forras has a static state thus no implementation is needed
 	}
 
 	/**
