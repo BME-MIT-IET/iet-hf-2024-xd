@@ -1,1213 +1,475 @@
 package org.drukmakor;
 
-/*import org.junit.jupiter.api.BeforeEach;
+import jdk.jfr.Description;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 class Tests {
-    ParancsErtelmezo pre;
-
-    @BeforeEach
-    void setUp() {
-        pre = new ParancsErtelmezo();
-        pre.runFromString("letrehoz forras pf1\n" +
-                "letrehoz ciszterna pc1\n" +
-                "letrehoz pumpa pp1\n" +
-                "letrehoz pumpa pp2\n" +
-                "letrehoz pumpa pp3\n" +
-                "letrehoz cso pcs1\n" +
-                "letrehoz cso pcs2\n" +
-                "letrehoz cso pcs3\n" +
-                "letrehoz cso pcs4\n" +
-                "letrehoz cso pcs5\n" +
-                "letrehoz cso pcs6\n" +
-                "letrehoz cso pcs7\n" +
-                "letrehoz szerelo psze1\n" +
-                "letrehoz szerelo psze2\n" +
-                "letrehoz szabotor psza1\n" +
-                "osszekot pcs1 pf1\n" +
-                "osszekot pcs1 pp1\n" +
-                "osszekot pp1 pcs2\n" +
-                "osszekot pcs2 pp2\n" +
-                "osszekot pp2 pcs6\n" +
-                "osszekot pcs6 pc1\n" +
-                "osszekot pc1 pcs7\n" +
-                "osszekot pp1 pcs3\n" +
-                "osszekot pcs3 pp3\n" +
-                "osszekot pp3 pcs4\n" +
-                "osszekot pcs4 pp2\n" +
-                "osszekot pp3 pcs5\n" +
-                "osszekot pcs5 pc1\n" +
-                "lep psza1 pcs3\n" +
-                "lep psze2 pp3\n" +
-                "lep psze1 pcs5\n"+
-                "veletlen ki"
-        );
-    }
-
     @DisplayName("Ez egy mindig lefuto teszt (check)")
     @Test
     void testSingleSuccessTest() {
         assertTrue(true);
     }
+}
 
-    @DisplayName("Cso letrehozasa")
+class CsoTests{
+    @DisplayName("Cso elrontasa, majd javitasa")
     @Test
-    void cso_letrehozasa() {
-        pre.runFromString("letrehoz cso cs1");
-        pre.runFromString("allapot cs1 *");
-        assertEquals("cs1 mukodik: true\n" +
-                        "cs1 szomszedok: \n" +
-                        "cs1 maxJatekosok: 1\n" +
-                        "cs1 maxSzomszedok: 2\n" +
-                        "cs1 jatekosok: \n" +
-                        "cs1 vizmennyiseg: 0\n"+
-                        "cs1 lyukCooldown: 0\n" +
-                        "cs1 csuszos: 0\n" +
-                        "cs1 ragados: 0",
-                pre.getAllapotString());
+    void testCsoJavitas() {
+        Cso cso = new Cso();
+        cso.setMukodik(false);
+        assertFalse(cso.getMukodik());
+        cso.Megjavit();
+        assertTrue(cso.getMukodik());
     }
 
-    @Test
-    @DisplayName("n Pumpa felcsatolasa a csore")
-    void felcsatol() {
-        pre.runFromString("letrehoz cso cs1\n" +
-                "letrehoz pumpa p1\n" +
-                "letrehoz pumpa p2\n" +
-                "letrehoz pumpa p3\n" +
-                "letrehoz pumpa p4\n" +
-                "letrehoz pumpa p5\n" +
-                "osszekot cs1 p1\n" +
-                "osszekot cs1 p2\n" +
-                "osszekot cs1 p3\n" +
-                "osszekot cs1 p4\n" +
-                "osszekot cs1 p5\n" +
-                "allapot cs1 szomszedok");
-        String output = pre.getAllapotString();
-        assertEquals("cs1 szomszedok: \n" +
-                "p1\n" +
-                "p2", output);
-    }
-
-    @Test
-    @DisplayName("Ket cso osszekotese")
-    void osszekot_ket_csot() {
-        pre.runFromString("letrehoz cs1\n" +
-                "letrehoz cs2\n" +
-                "osszekot cs1 cs2\n" +
-                "allapot cs1 szomszedok\n" +
-                "allapot cs2 szomszedok");
-        assertEquals("", pre.getAllapotString());
-    }
-
-    @Test
-    @DisplayName("Szomszedos, foglalt csore lepes")
-    void csore_lep() {
-        pre.runFromString("lep psze2 pcs5\n" +
-                "allapot pp3 jatekosok\n" +
-                "allapot pcs5 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pp3 jatekosok: \n" +
-                "psze2\n" +
-                "pcs5 jatekosok: \n" +
-                "psze1", out);
-    }
-
-    @Test
-    @DisplayName("ures cso tulpumpalasa")
-    void tulpumpal() {
-        pre.runFromString("allit psze2 pcs3 pcs5\n" +
-                "vizmennyiseg pp3 3\n" +
-                "frissit\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 vizmennyiseg: 1\n" +
-                "pp3 vizmennyiseg: 2", out);
-    }
-
-
-    @Test
-    @DisplayName("Cso kilyukasztasa")
-    void kilyukaszt() {
-        pre.runFromString("allit psze2 pcs3 pcs5\n" +
-                "vizmennyiseg pcs5 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "lyukaszt psze1\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "frissit\n" +
-                "allapot pcs5 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs5 mukodik: true\n" +
-                "pcs5 vizmennyiseg: 1\n" +
-                "pcs5 mukodik: false\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Kilyukasztott cso kilyukasztasa")
-    void lyukaszt() {
-        pre.runFromString("allit psze2 pcs3 pcs5\n" +
-                "vizmennyiseg pcs5 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "lyukaszt psze1\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "frissit\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "lyukaszt psze2\n" +
-                "frissit\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs5 mukodik: true\n" +
-                "pcs5 vizmennyiseg: 1\n" +
-                "pcs5 mukodik: false\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 mukodik: false\n" +
-                "pcs5 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Nemy lyukaszthato cso lyukasztasa")
-    void lyukaszt2() {
-        pre.runFromString("allit psze2 pcs5 pcs3\n" +
-                "vizmennyiseg pcs5 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "lyukaszt psze1\n" +
-                "szerel psze1\n" +
-                "lyukaszt psze1\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs5 lyukCooldown\n" +
-                "frissit\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs5 lyukCooldown");
-        String out = pre.getAllapotString();
-        assertEquals("pcs5 mukodik: true\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 lyukCooldown: 5\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 lyukCooldown: 4", out);
-    }
-
-    @Test
-    @DisplayName("Lyukas cso javitasa")
-    void javit() {
-        pre.runFromString("allit psze2 pcs5 pcs3\n" +
-                "vizmennyiseg pcs5 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "lyukaszt psze1\n" +
-                "szerel psze1\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs5 lyukCooldown\n" +
-                "frissit\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs5 lyukCooldown");
-        String out = pre.getAllapotString();
-        assertEquals("pcs5 mukodik: true\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 lyukCooldown: 5\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 lyukCooldown: 4", out);
-    }
-
-    @Test
-    @DisplayName("Nem lyukas, nem lyukaszthato csovet javit")
-    void javit2() {
-        pre.runFromString("allit psze2 pcs3 pcs5\n" +
-                "vizmennyiseg pcs5 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "lyukaszt psze1\n" +
-                "szerel psze1\n" +
-                "szerel psze1\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs5 lyukCooldown\n" +
-                "frissit\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs5 lyukCooldown");
-        String out = pre.getAllapotString();
-        assertEquals("pcs5 mukodik: true\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 lyukCooldown: 5\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs5 lyukCooldown: 4", out);
-    }
-
-    @Test
-    @DisplayName("Nem lyukas cso javitasa")
-    void javit3() {
-        pre.runFromString("allit psze2 pcs3 pcs5\n" +
-                "vizmennyiseg pcs5 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "szerel psze1\n" +
-                "allapot pcs5 mukodik\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs5 lyukCooldown\n" +
-                "frissit\n" +
-                "allapot pcs5 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs5 mukodik: true\n" +
-                "pcs5 vizmennyiseg: 1\n" +
-                "pcs5 lyukCooldown: 0\n" +
-                "pcs5 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Nem csuszos cso csuszossa tetele")
-    void csuszos() {
-        pre.runFromString("csuszik psza1\n" +
-                "allapot pcs3 csuszos\n" +
-                "allapot pcs3 jatekosok\n" +
-                "lep psza1 pp1\n" +
-                "lep psze2 pcs3\n" +
-                "allapot pp1 jatekosok\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp3 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 csuszos: 5\n" +
-                "pcs3 jatekosok: \n" +
-                "psza1\n" +
-                "pp1 jatekosok: \n" +
-                "psza1\n" +
-                "psze2\n" +
-                "pcs3 jatekosok: \n" +
-                "pp3 jatekosok:", out);
-    }
-
-    @Test
-    @DisplayName("Csuszos cso csuszossa tetele")
-    void csuszos2() {
-        pre.runFromString("csuszik psza1\n" +
-                "csuszik psza1\n" +
-                "allapot pcs3 csuszos\n" +
-                "allapot pcs3 jatekosok\n" +
-                "lep psza1 pp1\n" +
-                "lep psze2 pcs3\n" +
-                "allapot pp1 jatekosok\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp3 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 csuszos: 5\n" +
-                "pcs3 jatekosok: \n" +
-                "psza1\n" +
-                "pp1 jatekosok: \n" +
-                "psza1\n" +
-                "psze2\n" +
-                "pcs3 jatekosok: \n" +
-                "pp3 jatekosok:", out);
-    }
-
-    @Test
-    @DisplayName("Cso ragadossa tetele")
-    void ragados() {
-        pre.runFromString("ragad psza1\n" +
-                "allapot pcs3 ragados\n" +
-                "allapot pcs3 ragadossatette\n" +
-                "lep psza1 pp1\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp1 jatekosok\n" +
-                "allapot pcs3 ragadossatette");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 ragados: 5\n" +
-                "pcs3 ragadossaTette: psza1\n" +
-                "pcs3 jatekosok: \n" +
-                "pp1 jatekosok: \n" +
-                "psza1", out);
-    }
-
-    @Test
-    @DisplayName("Ragados cso ragadossa tetele")
-    void ragados2() {
-        pre.runFromString("ragad psza1\n" +
-                "ragad psza1\n" +
-                "allapot pcs3 ragados\n" +
-                "allapot pcs3 ragadossatette\n" +
-                "lep psza1 pp1\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp1 jatekosok\n" +
-                "allapot pcs3 ragadossatette\n" +
-                "lep psze2 pcs3\n" +
-                "ragad psza1\n" +
-                "allapot pcs3 ragadossatette\n" +
-                "lep psze2 pp3\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp3 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 ragados: 5\n" +
-                "pcs3 ragadossaTette: psza1\n" +
-                "pcs3 jatekosok: \n" +
-                "pp1 jatekosok: \n" +
-                "psza1\n" +
-                "pcs3 jatekosok: \n" +
-                "psze2\n" +
-                "pp3 jatekosok:", out);
-    }
-
-    @Test
-    @DisplayName("Ragados csorol lelepes")
-    void ragad_lep() {
-        pre.runFromString("ragad psza1\n" +
-                "allapot pcs3 ragados\n" +
-                "allapot pcs3 ragadossatette\n" +
-                "lep psza1 pp1\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp1 jatekosok\n" +
-                "allapot pcs3 ragadossatette\n" +
-                "lep psze2 pcs3\n" +
-                "lep psze2 pp3\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp3 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 ragados: 5\n" +
-                "pcs3 ragadossaTette: psza1\n" +
-                "pcs3 jatekosok: \n" +
-                "pp1 jatekosok: \n" +
-                "psza1\n" +
-                "pcs3 jatekosok: \n" +
-                "psze2\n" +
-                "pp3 jatekosok:", out);
-    }
-
-    @Test
-    @DisplayName("Csuszos cso ragadossa tetele")
-    void csuszik_ragad() {
-        pre.runFromString("csuszik psza1\n" +
-                "ragad psza1\n" +
-                "lep psza1 pp1\n" +
-                "lep psze2 pcs3\n" +
-                "lep psze2 pp3\n" +
-                "allapot pcs3 ragados\n" +
-                "allapot pcs3 csuszos\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp3 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 ragados: 5\n" +
-                "pcs3 csuszos: 5\n" +
-                "pcs3 jatekosok: \n" +
-                "psze2\n" +
-                "pp3 jatekosok:", out);
-    }
-
-    @Test
-    @DisplayName("Pumpa letrehozasa")
-    void pletrehoz() {
-        pre.runFromString("letrehoz pumpa p \n" +
-                "allapot p *");
-        String out = pre.getAllapotString();
-        assertEquals("p mukodik: true\n" +
-                "p szomszedok: \n" +
-                "p maxJatekosok: 2147483647\n" +
-                "p maxSzomszedok: 5\n" +
-                "p jatekosok: \n" +
-                "p vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("n db Pumpa felcsatolasa")
-    void pfelcsatol() {
-        pre.runFromString("letrehoz pumpa p\n" +
-                "letrehoz cso cs1\n" +
-                "letrehoz cso cs2\n" +
-                "letrehoz cso cs3\n" +
-                "letrehoz cso cs4\n" +
-                "letrehoz cso cs5\n" +
-                "letrehoz cso cs6\n" +
-                "osszekot p cs1\n" +
-                "osszekot p cs2\n" +
-                "osszekot p cs3\n" +
-                "osszekot p cs4\n" +
-                "osszekot p cs5\n" +
-                "osszekot p cs6\n" +
-                "allapot p maxSzomszedok\n" +
-                "allapot p szomszedok");
-        String out = pre.getAllapotString();
-        assertEquals("p maxSzomszedok: 5\n" +
-                "p szomszedok: \n" +
-                "cs1\n" +
-                "cs2\n" +
-                "cs3\n" +
-                "cs4\n" +
-                "cs5", out);
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("Pumpahoz aktiv elem kotese")
-    void aktiv() {
-        pre.runFromString("letrehoz pumpa p1\n" +
-                "letrehoz ciszterna c\n" +
-                "letrehoz forras f\n" +
-                "letrehoz pumpa p2\n" +
-                "osszekot p1 c\n" +
-                "osszekot p1 f\n" +
-                "osszekot p1 p2\n" +
-                "allapot p1 szomszedok");
-        String out = pre.getAllapotString();
-        assertEquals("szomszedok: ", out);
-    }
-
-    @Test
-    @DisplayName("Pumpara lepes")
-    void plepes() {
-        pre.runFromString("lep psza1 pp3\n" +
-                "allapot pcs3 jatekosok\n" +
-                "allapot pp3 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 jatekosok: \n" +
-                "pp3 jatekosok: \n" +
-                "psza1\n" +
-                "psze2", out);
-    }
-
-    @Test
-    @DisplayName("Pumpa allitasa")
-    void allit() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "allapot pp3 bemenet\n" +
-                "allapot pp3 kimenet");
-        String out = pre.getAllapotString();
-        assertEquals("pp3 bemenet: pcs4\n" +
-                "pp3 kimenet: pcs3", out);
-    }
-
-    @Test
-    @DisplayName("ervenytelen pumpa allitasa")
-    void allit2() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "allit psze2 pcs1 pcs2\n" +
-                "allapot pp3 bemenet\n" +
-                "allapot pp3 kimenet");
-        String out = pre.getAllapotString();
-        assertEquals("pp3 bemenet: pcs4\n" +
-                "pp3 kimenet: pcs3", out);
-    }
-
-    @Test
-    @DisplayName("Pumpalas ures csobe")
-    void pumpal() {
-        pre.runFromString("allit psze2 pcs3 pcs5\n" +
-                "vizmennyiseg pcs3 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg\n" +
-                "allapot pcs5 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 vizmennyiseg: 1\n" +
-                "pp3 vizmennyiseg: 3\n" +
-                "pcs5 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Pumpalas teli csobe")
-    void pumpal2() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "vizmennyiseg pcs3 1\n" +
-                "vizmennyiseg pp3 3\n" +
-                "vizmennyiseg pcs4 1\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg\n" +
-                "allapot pcs4 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 vizmennyiseg: 1\n" +
-                "pp3 vizmennyiseg: 4\n" +
-                "pcs4 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Pumpalas teli csobe, teli pumpaval")
-    void pumpal3() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "vizmennyiseg pcs3 1\n" +
-                "vizmennyiseg pp3 5\n" +
-                "vizmennyiseg pcs4 1\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg\n" +
-                "allapot pcs4 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 vizmennyiseg: 1\n" +
-                "pp3 vizmennyiseg: 5\n" +
-                "pcs4 vizmennyiseg: 1", out);
-    }
-
-    @Test
-    @DisplayName("ures csobol ures tartallyal pumpalas")
-    void pumpal4() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg\n" +
-                "allapot pcs4 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 vizmennyiseg: 0\n" +
-                "pp3 vizmennyiseg: 0\n" +
-                "pcs4 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("ures csobol, de nem ures tartallyal pumpalas")
-    void pumpal5() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "vizmennyiseg pp3 3\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg\n" +
-                "allapot pcs4 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 vizmennyiseg: 1\n" +
-                "pp3 vizmennyiseg: 2\n" +
-                "pcs4 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Elromlott pumpaval pumpalas")
-    void pumpal6() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "elront pp3\n" +
-                "vizmennyiseg pcs3 1\n" +
-                "vizmennyiseg pp3 1\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg\n" +
-                "allapot pcs4 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 vizmennyiseg: 1\n" +
-                "pp3 vizmennyiseg: 1\n" +
-                "pcs4 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Pumpa elrontasa")
-    void elrontp() {
-        pre.runFromString("allapot pp3 mukodik\n" +
-                "elront pp3\n" +
-                "allapot pp3 mukodik");
-        String out = pre.getAllapotString();
-        assertEquals("pp3 mukodik: true\n" +
-                "pp3 mukodik: false", out);
-    }
-
-    @Test
-    @DisplayName("Pumpa megjavitasa")
-    void pmegjavit() {
-        pre.runFromString("allit psze2 pcs3 pcs4\n" +
-                "elront pp3\n" +
-                "allapot pp3 mukodik\n" +
-                "vizmennyiseg pcs3 1\n" +
-                "vizmennyiseg pp3 1\n" +
-                "szerel psze2\n" +
-                "allapot pp3 mukodik\n" +
-                "frissit\n" +
-                "allapot pcs3 vizmennyiseg\n" +
-                "allapot pp3 vizmennyiseg\n" +
-                "allapot pcs4 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pp3 mukodik: false\n" +
-                "pp3 mukodik: true\n" +
-                "pcs3 vizmennyiseg: 1\n" +
-                "pp3 vizmennyiseg: 1\n" +
-                "pcs4 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Forras letrehozasa")
-    void fletrehoz() {
-        pre.runFromString("letrehoz forras tesztforras\n" +
-                "allapot tesztforras maxSzomszedok");
-        String out = pre.getAllapotString();
-        assertEquals("tesztforras maxSzomszedok: 5", out);
-    }
-
-    @Test
-    @DisplayName("Forrashoz csatolas tesztelese")
-    void forrashoz_csatol() {
-        pre.runFromString("letrehoz forras tesztforras \n" +
-                "letrehoz cso cso1\n" +
-                "letrehoz cso cso2\n" +
-                "letrehoz cso cso3\n" +
-                "letrehoz cso cso4\n" +
-                "letrehoz cso cso5\n" +
-                "allapot tesztforras szomszedok\n" +
-                "osszekot tesztforras cso1\n" +
-                "allapot tesztforras szomszedok\n" +
-                "osszekot tesztforras cso2\n" +
-                "allapot tesztforras szomszedok\n" +
-                "osszekot tesztforras cso3\n" +
-                "allapot tesztforras szomszedok\n" +
-                "osszekot tesztforras cso4\n" +
-                "allapot tesztforras szomszedok\n" +
-                "osszekot tesztforras cso5\n"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("tesztforras szomszedok: \n" +
-                "tesztforras szomszedok: \n" +
-                "cso1\n" +
-                "tesztforras szomszedok: \n" +
-                "cso1\n" +
-                "cso2\n" +
-                "tesztforras szomszedok: \n" +
-                "cso1\n" +
-                "cso2\n" +
-                "cso3\n" +
-                "tesztforras szomszedok: \n" +
-                "cso1\n" +
-                "cso2\n" +
-                "cso3\n" +
-                "cso4", out);
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("Forrashoz aktiv elem csatlakoztatasa: ")
-    void hozzacsatol() {
-        pre.runFromString("letrehoz forras tesztforras \n" +
-                "letrehoz pumpa p1 \n" +
-                "letrehoz ciszterna c1 \n" +
-                "letrehoz forras f1\n" +
-                "osszekot tesztforras p1\n" +
-                "allapot tesztforras szomszedok\n" +
-                "osszekot tesztforras c1\n" +
-                "allapot tesztforras szomszedok\n" +
-                "osszekot tesztforras f1\n" +
-                "allapot tesztforras szomszedok\n"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("tesztforras szomszedok: \n" +
-                "tesztforras szomszedok: \n" +
-                "tesztforras szomszedok: \n", out);
-    }
-
-    @Test
-    @DisplayName("A forras vizet termel")
-    void ftermel() {
-        pre.runFromString("frissit \n" +
-                "allapot pcs1 vizmennyiseg \n");
-        String out = pre.getAllapotString();
-        assertEquals("pcs1 vizmennyiseg: 1", out);
-    }
-
-    @Test
-    @DisplayName("Forras vizet termel, cso teli")
-    void ftermel2() {
-        pre.runFromString("vizmennyiseg pcs1 1 \n" +
-                "frissit \n" +
-                "allapot pcs1 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs1 vizmennyiseg: 1", out);
-    }
-
-    @Test
-    @DisplayName("Csorol a forrasra leptetek egy jatekost")
-    void forrasralep() {
-        pre.runFromString("lep psza1 pp1 \n" +
-                "lep psza1 pcs1 \n" +
-                "lep psza1 pf1 \n" +
-                "allapot pf1 jatekosok \n" +
-                "allapot pcs1 jatekosok"
-
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pf1 jatekosok: \n" +
-                "psza1\n" +
-                "pcs1 jatekosok:", out);
-    }
-
-    @Test
-    @DisplayName("Csorol forrasra lep, ahol van ember")
-    void ralep2() {
-        pre.runFromString(
-                "lep psza1 pp1 \n" +
-                "lep psza1 pcs1\n" +
-                "lep psza1 pf1\n" +
-                "lep psze2 pcs3 \n" +
-                "lep psze2 pp1 \n" +
-                "lep psze2 pcs1 \n" +
-                "lep psze2 pf1 \n" +
-                "allapot pf1 jatekosok \n" +
-                "allapot pcs1 jatekosok"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pf1 jatekosok: \n" +
-                "psza1\n" +
-                "psze2\n" +
-                "pcs1 jatekosok:"
-, out);
-    }
-
-    @Test
-    @DisplayName("Ciszternat letrehoz")
-    void cizsternat_letrehoz() {
-        pre.runFromString("letrehoz ciszterna tesztciszterna \n" +
-                "allapot tesztciszterna termeltpumpak \n" +
-                "allapot tesztciszterna szomszedok");
-        String out = pre.getAllapotString();
-        assertEquals("tesztciszterna termeltPumpak: \n" +
-                "tesztciszterna szomszedok:", out);
-
-    }
-
-    @Test
-    @DisplayName("Ciszternahoz sok csovet csatlakoztatok")
-    void ciszterna_kapcsol() {
-        pre.runFromString("letrehoz ciszterna tesztciszterna\n" +
-                "letrehoz cso cso1\n" +
-                "osszekot tesztciszterna cso1\n" +
-                "letrehoz cso cso2\n" +
-                "osszekot tesztciszterna cso2\n" +
-                "letrehoz cso cso3\n" +
-                "osszekot tesztciszterna cso3\n" +
-                "letrehoz cso cso4\n" +
-                "osszekot tesztciszterna cso4\n" +
-                "letrehoz cso cso5\n" +
-                "osszekot tesztciszterna cso5\n" +
-                "letrehoz cso cso6\n" +
-                "osszekot tesztciszterna cso6\n" +
-                "letrehoz cso cso7\n" +
-                "osszekot tesztciszterna cso7\n" +
-                "letrehoz cso cso8\n" +
-                "osszekot tesztciszterna cso8\n" +
-                "letrehoz cso cso9\n" +
-                "osszekot tesztciszterna cso9\n" +
-                "letrehoz cso cso10\n" +
-                "osszekot tesztciszterna cso10\n" +
-                "letrehoz cso cso11\n" +
-                "osszekot tesztciszterna cso11\n" +
-                "letrehoz cso cso12\n" +
-                "osszekot tesztciszterna cso12\n" +
-                "letrehoz cso cso13\n" +
-                "osszekot tesztciszterna cso13\n" +
-                "letrehoz cso cso14\n" +
-                "osszekot tesztciszterna cso14\n" +
-                "letrehoz cso cso15\n" +
-                "osszekot tesztciszterna cso15\n" +
-                "letrehoz cso cso16\n" +
-                "osszekot tesztciszterna cso16\n" +
-                "letrehoz cso cso17\n" +
-                "osszekot tesztciszterna cso17\n" +
-                "letrehoz cso cso18\n" +
-                "osszekot tesztciszterna cso18\n" +
-                "letrehoz cso cso19\n" +
-                "osszekot tesztciszterna cso19\n" +
-                "letrehoz cso cso20\n" +
-                "osszekot tesztciszterna cso20\n" +
-                "letrehoz cso cso21\n" +
-                "osszekot tesztciszterna cso21\n" +
-                "allapot tesztciszterna szomszedok"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("tesztciszterna szomszedok: \n" +
-                "cso1\n" +
-                "cso10\n" +
-                "cso11\n" +
-                "cso12\n" +
-                "cso13\n" +
-                "cso14\n" +
-                "cso15\n" +
-                "cso16\n" +
-                "cso17\n" +
-                "cso18\n" +
-                "cso19\n" +
-                "cso2\n" +
-                "cso20\n" +
-                "cso3\n" +
-                "cso4\n" +
-                "cso5\n" +
-                "cso6\n" +
-                "cso7\n" +
-                "cso8\n" +
-                "cso9", out);
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("Ciszternahoz aktiv elemet csatlakoztatok: ")
-    void  aktiv_csati() {
-        pre.runFromString("letrehoz ciszterna tesztciszterna\n" +
-                "letrehoz pumpa p1\n" +
-                "letrehoz ciszterna c1\n" +
-                "letrehoz forras f1\n" +
-                "allapot tesztciszterna szomszedok\n" +
-                "osszekot tesztciszterna p1\n" +
-                "allapot tesztciszterna szomszedok\n" +
-                "osszekot tesztciszterna c1\n" +
-                "allapot tesztciszterna szomszedok\n" +
-                "osszekot tesztciszterna f1\n" +
-                "allapot tesztciszterna szomszedok\n" +
-                "osszekot tesztciszterna p1");
-        String out = pre.getAllapotString();
-        assertEquals("tesztciszterna szomszedok: \n" +
-                "tesztciszterna szomszedok: \n" +
-                "tesztciszterna szomszedok: \n" +
-                "tesztciszterna szomszedok: \n", out);
-    }
-
-    @Test
-    @DisplayName("Ciszterna vizet sziv")
-    void ciszterna_sziv() {
-        pre.runFromString("vizmennyiseg pcs6 1\n" +
-                "vizmennyiseg pcs5 1\n" +
-                "vizmennyiseg pcs7 1\n" +
-                "frissit\n" +
-                "allapot pcs6 vizmennyiseg\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs7 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs6 vizmennyiseg: 0\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs7 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Ciszterna vizet sziv, de csovekben nincs viz")
-    void ciszterna_sziv2() {
-        pre.runFromString("vizmennyiseg pcs6 1\n" +
-                "vizmennyiseg pcs7 1\n" +
-                "frissit\n" +
-                "allapot pcs6 vizmennyiseg\n" +
-                "allapot pcs5 vizmennyiseg\n" +
-                "allapot pcs7 vizmennyiseg"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pcs6 vizmennyiseg: 0\n" +
-                "pcs5 vizmennyiseg: 0\n" +
-                "pcs7 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Ciszterna uj pumpat hoz letre")
-    void ujpumpa_by_ciszterna() {
-        pre.runFromString("termel pc1 pumpa\n" +
-                "allapot pc1 termeltpumpak");
-        String out = pre.getAllapotString();
-        assertEquals("pc1 termeltPumpak: \n" +
-                "gen0", out);
-    }
-
-    @Test
-    @DisplayName("Ciszternaba uj csovet hoznek letre, de nincs hely")
-    void ciszterna_ujsco() {
-        pre.runFromString(
-                "letrehoz cso cs1\n" +
-                        "osszekot cs1 pc1\n" +
-                        "letrehoz cso cs2\n" +
-                        "osszekot cs2 pc1\n" +
-                        "letrehoz cso cs3\n" +
-                        "osszekot cs3 pc1\n" +
-                        "allapot pc1 szomszedok"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pc1 szomszedok: \n" +
-                        "cs1\n" +
-                        "cs2\n" +
-                        "cs3\n" +
-                        "pcs5\n" +
-                        "pcs6\n" +
-                        "pcs7"
-                , out);
-    }
-
-    @Test
-    @DisplayName("Csorol pumpara lepek, majd vissza")
-    void leptest() {
-        pre.runFromString("lep psza1 pp1\n" +
-                "allapot pp1 jatekosok\n" +
-                "lep psza1 pcs3\n" +
-                "allapot pcs3 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pp1 jatekosok: \n" +
-                "psza1\n" +
-                "pcs3 jatekosok: \n" +
-                "psza1", out);
-    }
-
-    @Test
-    @DisplayName("Csorol forrasra lepek, majd vissza")
-    void lep2() {
-        pre.runFromString("lep psza1 pp1\n" +
-                "lep psza1 pcs1\n" +
-                "lep psza1 pf1\n" +
-                "allapot pf1 jatekosok\n" +
-                "lep psza1 pcs1 \n" +
-                "allapot pcs1 jatekosok"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pf1 jatekosok: \n" +
-                "psza1\n" +
-                "pcs1 jatekosok: \npsza1", out);
-    }
-
-    @Test
-    @DisplayName("Csorol pumpara lepek, majd vissza")
-    void lep3() {
-        pre.runFromString("lep psze1 pc1\n" +
-                "allapot pc1 jatekosok\n" +
-                "lep psze1 pcs5\n" +
-                "allapot pcs5 jatekosok");
-        String out = pre.getAllapotString();
-        assertEquals("pc1 jatekosok: \n" +
-                "psze1\n" +
-                "pcs5 jatekosok: \n" +
-                "psze1", out);
-    }
-
-    @Test
-    @DisplayName("Kilyukasztok egy csovet")
-    void lyuk() {
-        pre.runFromString("lyukaszt psza1\n" +
-                "allapot pcs3 mukodik\n" +
-                "allapot pcs3 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 mukodik: false\n" +
-                "pcs3 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Ragadossa teszek")
-    void ragacs() {
-        pre.runFromString("ragad psza1\n" +
-                "allapot pcs3 ragados");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 ragados: 5", out);
-    }
-
-    @Test
-    @DisplayName("Letrehozok egy szerelot")
-    void szerelo_megszuletik() {
-        pre.runFromString("letrehoz szerelo sz1\n" +
-                "allapot sz1 maxHatizsakKapacitas");
-        String out = pre.getAllapotString();
-        assertEquals("sz1 maxHatizsakKapacitas: 5", out);
-    }
-
-    @Test
-    @DisplayName("Megfoltozok egy csovet")
-    void csofoltozas() {
-        pre.runFromString("lyukaszt psza1\n" +
-                "lep psza1 pp1\n" +
-                "lep psze2 pcs3\n" +
-                "szerel psze2\n" +
-                "allapot pcs3 mukodik");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 mukodik: true", out);
-    }
-
-    @Test
-    @DisplayName("Szerelo felvesz egy pumpat a ciszternatol")
-    void pumpatfelvesz() {
-        pre.runFromString("lep psze1 pc1 \n" +
-                "termel pc1 pumpa\n" +
-                "felvesz psze1 pumpa \n" +
-                "allapot psze1 pumpaHatizsak \n" +
-                "allapot pc1 termeltPumpak"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("psze1 pumpaHatizsak: \n" +
-                "gen0\n" +
-                "pc1 termeltPumpak:", out);
-    }
-
-    @Test
-    @DisplayName("Szerelo felvesz egy pumpat a hatizsakba, de nincs hely a szerelonel")
-    void szerelu_pumpat_felvesz() {
-        pre.runFromString("lep psze1 pc1\n" +
-                "termel pc1 pumpa\n" +
-                "termel pc1 pumpa\n" +
-                "termel pc1 pumpa\n" +
-                "termel pc1 pumpa\n" +
-                "termel pc1 pumpa\n" +
-                "termel pc1 pumpa\n" +
-                "felvesz psze1 pumpa \n" +
-                "felvesz psze1 pumpa \n" +
-                "felvesz psze1 pumpa \n" +
-                "felvesz psze1 pumpa \n" +
-                "felvesz psze1 pumpa \n" +
-                "felvesz psze1 pumpa \n" +
-                "allapot pc1 termeltpumpak\n" +
-                "allapot psze1 pumpaHatizsak"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pc1 termeltPumpak: \n" +
-                        "gen0\n" +
-                        "psze1 pumpaHatizsak: \n" +
-                        "gen1\n" +
-                        "gen2\n" +
-                        "gen3\n" +
-                        "gen4\n" +
-                        "gen5"
-                , out);
-    }
-
-    @Test
-    @DisplayName("Ciszternahoz kapcsolodo pumpat a hatizsakba teszek")
-    void pumpa_hatizsak() {
-        pre.runFromString("lep psze1 pc1\n" +
-                "termel pc1 pumpa\n" +
-                "felvesz psze1 pumpa \n" +
-                "allapot psze1 pumpaHatizsak\n" +
-                "allapot pc1 szomszedok");
-        String out = pre.getAllapotString();
-        assertEquals("psze1 pumpaHatizsak: \n" +
-                "gen0\n" +
-                "pc1 szomszedok: \n" +
-                "pcs5\n" +
-                "pcs6\n" +
-                "pcs7", out);
-    }
-
-    @Test
-    @DisplayName("Egy cso mindket veget felveszem")
-    void felveszfel() {
-        pre.runFromString("vizmennyiseg pcs7 1\n" +
-                "lep psze1 pc1\n" +
-                "felvesz psze1 cso pcs7 egesz\n" +
-                "allapot pc1 szomszedok\n" +
-                "allapot psze1 csoHatizsak\n" +
-                "allapot pcs7 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pc1 szomszedok: \n" +
-                "pcs5\n" +
-                "pcs6\n" +
-                "psze1 csoHatizsak: \n" + "pcs7\n" + "pcs7\n" +
-                "pcs7 vizmennyiseg: 1", out);
-    }
-
-    @Test
-    @DisplayName("Pumpa kimenetet lecsatlakoztatom")
-    void pumpa_lecsatlakoztat() {
-        pre.runFromString("vizmennyiseg pcs3 1\n" +
-                "allit  psze2 pcs3 pcs4\n" +
-                "felvesz cso pcs4 fel\n" +
-                "frissit\n" +
-                "allapot pcs4 vizmennyiseg");
-        String out = pre.getAllapotString();
-        assertEquals("pcs4 vizmennyiseg: 0", out);
-    }
-
-    @Test
-    @DisplayName("Csovet hatizsakbol felcsatol")
-    void csovet_felcsatol() {
-        pre.runFromString("vizmennyiseg pcs3 1\n" +
-                "allit psze2 pcs3 pcs4\n" +
-				"felvesz psze2 cso pcs4 fel\n"
-				+
-                "allapot pp3 szomszedok\n" +
-                "epit psze2 cso\n" +
-                "allapot pp3 szomszedok\n" +
-                "allapot psze2 csoHatizsak");
-        String out = pre.getAllapotString();
-        assertEquals("pp3 szomszedok: \n" +
-                "pcs3\n" +
-                "pcs5\n" +
-                "pp3 szomszedok: \n" +
-                "pcs3\n" +
-                "pcs4\n" +
-                "pcs5\n" +
-                "psze2 csoHatizsak:", out);
-    }
-
-    @Test
-    @DisplayName("Csovet teli pumpahoz csatol")
-    void pumpacsatol() {
-        pre.runFromString(
-                "letrehoz cso cs0\n" +
-                        "osszekot pp3 cs0\n" +
-                        "letrehoz cso cs1\n" +
-                        "osszekot pp3 cs1\n" +
-                        "letrehoz cso cs2\n" +
-                        "osszekot pp3 cs2\n" +
-                        "letrehoz cso cs3\n" +
-                        "osszekot pp3 cs3\n" +
-                        "letrehoz cso cs4\n" +
-                        "osszekot pp3 cs4\n" +
-                        "letrehoz cso cs5\n" +
-                        "osszekot pp3 cs5\n" +
-                        "letrehoz cso cs6\n" +
-                        "osszekot pp3 cs6\n" +
-                        "allapot pp3 szomszedok");
-        String out = pre.getAllapotString();
-        assertEquals("pp3 szomszedok: \n" +
-                "cs0\n" +
-                "cs1\n" +
-                "pcs3\n" +
-                "pcs4\n" +
-                "pcs5", out);
-    }
-
-    @Test
-    @DisplayName("Pumpat epitek csovon")
-    void pumpa_csovon() {
-        pre.runFromString("lep psze1 pc1\n" +
-                "termel pc1 pumpa\n" +
-                "termel pc1 cso\n" +    //TODO: itt hogy van a cső létrehozás?
-                "felvesz psze1 pumpa\n" +
-                "felvesz psze1 cso gen0\n" +
-                "lep psze1 pcs5\n" +
-                "epit psze1 pumpa\n" +
-                "allapot pcs5 szomszedok\n" +
-                "allapot p1 szomszedok\n" +
-                "allapot cs1 szomszedok"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pcs5 szomszedok: \n" +
-                "gen0\n" +
-                "pc1", out);
-    }
-
-    @Test
-    @DisplayName("Pumpat epitek csovon, aminek 1 vege van")
-    void pumpa_epit() {
-        pre.runFromString("lep psze1 pc1 \n" +
-                "termel pc1 pumpa \n" +
-                "termel pc1 cso \n" +
-                "felvesz psze1 pumpa \n" +
-                "felvesz psze1 cso pcs7 \n" +
-                "lep psze1 pcs7\n" +
-                "epit psze1 pumpa \n" +
-                "allapot pcs7 szomszedok \n" +
-                "allapot p1 szomszedok \n" +
-                "allapot cs1 szomszedok"
-        );
-        String out = pre.getAllapotString();
-        assertEquals("pcs7 szomszedok:", out);
-    }
-
-    @Test
-    @DisplayName("Szabotor letrehozasa")
-    void szabotor_birth() {
-        pre.runFromString("letrehoz szabotor sz\n" +
-                "allapot sz *");
-        String out = pre.getAllapotString();
-        assertEquals("sz maxHatizsakKapacitas: 5\n" +
-                "sz pumpaHatizsak: \n" +
-                "sz csoHatizsak:", out);
-    }
-
-    @Test
     @DisplayName("Cso csuszossa tetele")
-    void csuszoss() {
-        pre.runFromString("allapot pcs3 csuszos\n" +
-                "csuszik psza1\n" +
-                "allapot pcs3 csuszos");
-        String out = pre.getAllapotString();
-        assertEquals("pcs3 csuszos: 0\n" +
-                "pcs3 csuszos: 5", out);
+    @Test
+    void testCsoCsuszossa() {
+        Cso cso = new Cso();
+        cso.Csuszik();
+        assertEquals(5, cso.getCsuszos());
     }
 
-}*/
+    @DisplayName("Cso ragadossa tetele")
+    @Test
+    void testCsoRagadossa() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        szerelo.Lep(cso); // Legalabb egy jatekosnak kell lennie a csovon
+        cso.Ragad();
+        assertEquals(5, cso.getRagados());
+    }
+
+    @DisplayName("Ragadossa tette")
+    @Test
+    void testRagadossaTette() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        szerelo.Lep(cso); // Legalabb egy jatekosnak kell lennie a csovon
+        cso.Ragad();
+        assertEquals(szerelo, cso.getRagadossaTette());
+    }
+
+    @DisplayName("Jatekos elengedese")
+    @Description("Azt nezzuk, hogy helyesen muokdik-e a cso ragadossaga. " +
+            "Az a jatekos, aki ragadossa tette a csovet lelephet rola," +
+            "mig mas jatekosok nem.")
+    @Test
+    void testJatekosElenged() throws Exception {
+        Szerelo szerelo = new Szerelo();
+        Szabotor szabotor = new Szabotor();
+        Cso cso = new Cso();
+        szerelo.Lep(cso); // A szerelo ralep a csore
+        cso.Ragad(); // ...es ragadossa teszi
+        assertTrue(cso.JatekosElenged(szerelo)); // A szerelo tette ragadossa, ezert ot elengedi
+        cso.JatekosEltavolit(szerelo); // Eltavolitjuk a szerelot, hogy a szabotor oda tudjon lepni (mivel csak egy jatekos lehet a csovon)
+        szabotor.Lep(cso); // Ezutan a szabotor lep a csore, neki ra kell ragadnia
+        assertFalse(cso.JatekosElenged(szabotor)); // Tehat mivel nem a szabotor tette ragadossa, ezert nem engedjuk el
+        // megvarjuk amig a ragadossag elmulik, ez 5 kor, majd ujra megprobaljuk
+        for (int i = 0; i < 5; i++) {
+            cso.Frissit();
+        }
+        assertTrue(cso.JatekosElenged(szabotor)); // Most mar elengedheti
+    }
+
+    @DisplayName("Jatekos elfogadasa, ures cso")
+    @Test
+    void testJatekosElfogad() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        assertTrue(cso.JatekosElfogad(szerelo));
+    }
+
+    @DisplayName("Jatekos elfogadasa, tele cso")
+    @Test
+    void testJatekosElfogad2() {
+        Szerelo szerelo = new Szerelo();
+        Szabotor szabotor = new Szabotor();
+        Cso cso = new Cso();
+        szerelo.Lep(cso); //Egy valaki mar all a csovon
+        assertFalse(cso.JatekosElfogad(szabotor)); // Nem tudunk tobb jatekost elfogadni (max 1 jatekos lehet a csovon)
+    }
+
+    @DisplayName("Kilyukasztas")
+    @Test
+    void testKilyukasztas() {
+        Cso cso = new Cso();
+        cso.SetVizmennyiseg(1); // A cso tartalmaz vizet
+        cso.Kilyukaszt(); // Kilyukasztjuk
+        assertFalse(cso.getMukodik()); // A cso nem mukodik mert kilyukasztottuk
+        assertEquals(0, cso.getVizmennyiseg()); // A viz kifolyt a csobol a kilyukasztas miatt
+    }
+
+    @DisplayName("LyukCooldown")
+    @Test
+    void testLyukCooldown() throws Exception {
+        Cso cso = new Cso();
+        cso.SetVizmennyiseg(1); // A cso tartalmaz vizet
+        cso.Kilyukaszt(); // Kilyukasztjuk
+        cso.setMukodik(true); // A csovet rogton ujra megjavitjuk
+        assertEquals(5, cso.getLyukCooldown()); // A lyukasztas utan 5 korig nem lehet ujra kilyukasztani
+        cso.Kilyukaszt(); // Megprobaljuk ujra kilyukasztani, de nem sikerul
+        assertTrue(cso.getMukodik()); // A cso mukodik
+        for (int i = 0; i < 5; i++) {
+            cso.Frissit(); // 5 kor telik el
+        }
+        assertEquals(0, cso.getLyukCooldown()); // Most mar ujra kilyukaszthatjuk
+        cso.Kilyukaszt(); // Kilyukasztjuk
+        assertFalse(cso.getMukodik()); // A cso nem mukodik mert kilyukasztottuk
+    }
+
+    @DisplayName("VizetNovel")
+    @Test
+    void testVizetNovel() throws Exception {
+        Cso cso = new Cso();
+        cso.VizetNovel(1); // 1 egység vizet pumpalunk a csobe
+        assertEquals(1, cso.getVizmennyiseg()); // A cso tartalmaz 1 egység vizet
+        cso.VizetNovel(1); // még 1 egység vizet pumpalunk a csobe
+        assertEquals(1, cso.getVizmennyiseg()); // A csoben maximum 1 egység viz lehet, tehát továbbra is 1 egység van benne
+    }
+
+    @DisplayName("VizetNovel nem mukodo cso")
+    @Test
+    void testVizetNovel2() throws Exception {
+        Cso cso = new Cso();
+        cso.Kilyukaszt(); // Kilyukasztjuk a csot
+        cso.VizetNovel(1); // 1 egység vizet pumpalunk a csobe
+        assertEquals(0, cso.getVizmennyiseg()); // A cso nem mukodik, ezert nem lehet vizet pumpalni bele
+    }
+
+    @DisplayName("VizetCsokkent")
+    @Test
+    void testVizetCsokkent() throws Exception {
+        Cso cso = new Cso();
+        cso.SetVizmennyiseg(1); // A cso tartalmaz 1 egység vizet
+        cso.VizetCsokkent(1); // 1 egység vizet kiveszunk a csobol
+        assertEquals(0, cso.getVizmennyiseg()); // A cso tartalma 0
+        cso.VizetCsokkent(1); // még 1 egység vizet megprobálunk kivenni a csobol
+        assertEquals(0, cso.getVizmennyiseg()); // A cso tartalma tovabbra is 0, mert nem lehet negativ vizmennyiseg
+    }
+
+    @DisplayName("Szomszed hozzaadas")
+    @Test
+    void testSzomszedHozzaad() {
+        Cso cso = new Cso();
+        Pumpa pumpa = new Pumpa();
+        cso.SzomszedHozzaad(pumpa); // Hozzaadjuk a pumpa-t a cso szomszedaihoz
+        assertEquals(1, cso.GetSzomszedok().size()); // A cso egy szomszeddal rendelkezik
+        assertEquals(pumpa, cso.GetSzomszedok().get(0)); // A szomszed a cso2
+        //Második pumpa szomszéd hozzáadása
+        Pumpa pumpa2 = new Pumpa();
+        cso.SzomszedHozzaad(pumpa2); // Hozzaadjuk a pumpa2-t a cso szomszedaihoz
+        assertEquals(2, cso.GetSzomszedok().size()); // A cso ket szomszeddal rendelkezik
+        assertEquals(pumpa2, cso.GetSzomszedok().get(1)); // A masodik szomszed a pumpa2
+        //Ha a cso mar ket szomszeddal rendelkezik, akkor nem tudunk tobbet hozzaadni
+        Ciszterna c = new Ciszterna();
+        cso.SzomszedHozzaad(c); // Hozzaadjuk a ciszternat a cso szomszedaihoz
+        assertEquals(2, cso.GetSzomszedok().size()); // A cso tovabbra is ket szomszeddal rendelkezik
+        assertFalse(cso.GetSzomszedok().contains(c)); // A cso szomszedai kozott nincs a ciszterna
+
+    }
+
+    @DisplayName("PumpaEpit")
+    @Test
+    void testPumpaEpit() {
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        cso.SzomszedHozzaad(c); //Ez a ciszterna azért kell mert a pumpaepit függvényben a cso szomszédait vizsgáljuk (Kell hogy legyen legalább egy szomszéd)
+        Szerelo szerelo = new Szerelo();
+        szerelo.getPumpaHatizsak().add(new Pumpa()); // A szerelo hátizsákjában van egy pumpa
+        szerelo.Lep(cso); // A szerelo ralep a csore
+        cso.PumpaEpit(); // A csohoz hozzaepitjuk a pumpat
+        assertEquals(1, cso.GetSzomszedok().size()); // A cso egy szomszeddal rendelkezik
+        assertInstanceOf(Pumpa.class, cso.GetSzomszedok().get(0)); // A szomszed egy pumpa
+        assertEquals(0, szerelo.getPumpaHatizsak().size()); // A szerelo hátizsákjában nincs tobb pumpa
+        assertEquals(2, cso.GetSzomszedok().get(0).GetSzomszedok().size()); // A pumpa ket szomszeddal rendelkezik
+    }
+
+    @DisplayName("Csuszos csorol tovabb csuszik a jatekos")
+    @Test
+    void testCsuszosCsorolCsuszik() {
+        // A veletlen esemenyeket kikapcsoljuk ehhez a teszthez, mert a csuszas veletlenszeru szomszedra csusztatja a jatekost
+        Mezo.doRandomThings = false; //Ha ezt kikapcsoltuk akkor a jatekos mindig az elso szomszedra csuszik (egyebkent veletlenszeruen a két szomszéd közül)
+        Cso cso = new Cso();
+        Pumpa pumpa = new Pumpa();
+        Pumpa pumpa2 = new Pumpa();
+        cso.Csuszik(); // A csot csuszossa tesszuk, ez azt jelenti hogy ha rálép valaki akokr tovább fog csúszni az első szomszédra
+        cso.SzomszedHozzaad(pumpa); // Ez az elso szomszed, erre fog csuszni a jatekos
+        cso.SzomszedHozzaad(pumpa2);
+        Szerelo szerelo = new Szerelo();
+        szerelo.Lep(cso); // A szerelo ralep a csore, de mivel csuszossa tettuk a csot, ezert tovabb fog csuszni
+        assertEquals(pumpa, szerelo.getHelyzet()); // A szerelo a pumpa-ra csuszott
+    }
+
+    @DisplayName("Csuszossag elmúltával a jatekos nem csuszik tovább")
+    @Test
+    void testCsuszosCsorolCsuszik2() throws Exception {
+        // A veletlen esemenyeket kikapcsoljuk ehhez a teszthez, mert a csuszas veletlenszeru szomszedra csusztatja a jatekost
+        Mezo.doRandomThings = false; //Ha ezt kikapcsoltuk akkor a jatekos mindig az elso szomszedra csuszik (egyebkent veletlenszeruen a két szomszéd közül)
+        Cso cso = new Cso();
+        Pumpa pumpa = new Pumpa();
+        Pumpa pumpa2 = new Pumpa();
+        cso.Csuszik(); // A csot csuszossa tesszuk, ez azt jelenti hogy ha rálép valaki akokr tovább fog csúszni az első szomszédra
+        cso.SzomszedHozzaad(pumpa); // Ez az elso szomszed, erre fog csuszni a jatekos
+        cso.SzomszedHozzaad(pumpa2);
+        pumpa.SzomszedHozzaad(cso);
+        pumpa2.SzomszedHozzaad(cso);
+        Szerelo szerelo = new Szerelo();
+        szerelo.Lep(cso); // A szerelo ralep a csore, de mivel csuszossa tettuk a csot, ezert tovabb fog csuszni
+        assertEquals(pumpa, szerelo.getHelyzet()); // A szerelo a pumpa-ra csuszott
+        // 5 frissítés után a csuszosság el fog múlni
+        for (int i = 0; i < 5; i++) {
+            cso.Frissit();
+        }
+        assertEquals(0, cso.getCsuszos()); // A csuszossag elmult
+        szerelo.Lep(cso); // A szerelo ralep a csore, de mar nem fog tovabb csuszni
+        assertEquals(cso, szerelo.getHelyzet()); // A szerelo a cso-ra lepett
+    }
+
+    @DisplayName("Ragados nem teheto ragadossa ujra")
+    @Test
+    void testRagadosNemRagadhatUjra() throws Exception {
+        Cso cso = new Cso();
+        Szerelo szerelo = new Szerelo();
+        szerelo.Lep(cso); // Legalabb egy jatekosnak kell lennie a csovon
+        Szerelo masikSzerelo = new Szerelo();
+        szerelo.RagadossaTesz(); // A szerelo ragadossa tette a csot
+        cso.getJatekosok().remove(szerelo); // Eltavolitjuk a szerelot a csorol
+        masikSzerelo.Lep(cso); // A masik szerelo ralep a csore
+        cso.Frissit(); // 1 kor telik el
+        masikSzerelo.RagadossaTesz(); // A masik szerelo is ragadossa probalja tenni a csovet, de ő nem tudja mert a csot mar ragadossa tette az előző szerelo
+        assertEquals(szerelo, cso.getRagadossaTette()); // A szerelo ragadossa tette a csot
+        assertEquals(4, cso.getRagados()); // A ragadossag 4 korig tart még (tehát a masik szerelo nem tudta ragadossa tenni)
+
+    }
+
+
+}
+
+class SzereloTests {
+    @DisplayName("Szerelo pumpat javit")
+    @Test
+    void testSzereloPumpaJavitas() {
+        Szerelo szerelo = new Szerelo();
+        Pumpa pumpa = new Pumpa();
+        pumpa.setMukodik(false); // A pumpa nem mukodik
+        szerelo.Lep(pumpa); // A szerelo ralep a pumpara (csak igy tudja megjavítani)
+        szerelo.Javit(); // A szerelo megjavítja a pumpat
+        assertTrue(pumpa.getMukodik()); // A pumpa mukodik
+    }
+
+    @DisplayName("Cso lecsatolasa sikeres")
+    @Test
+    void testCsoLecsatolas() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        cso.SzomszedHozzaad(c); // A cso szomszedaihoz hozzaadjuk a ciszternat
+        c.SzomszedHozzaad(cso); // A ciszterna szomszedaihoz hozzaadjuk a csot (kölcsönösen kell hozzaadni)
+        szerelo.CsovetLecsatol(cso); // A szerelo lecsatolja a csot a ciszternarol
+        assertEquals(0, cso.GetSzomszedok().size()); // A cso nem rendelkezik szomszedokkal, mert le lett csatolva
+        assertEquals(0, c.GetSzomszedok().size()); // A ciszterna sem rendelkezik szomszedokkal, mert le lett csatolva
+        assertEquals(1, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában van a cső
+        assertEquals(cso, szerelo.getCsoHatizsak().get(0)); // A hátizsákban a cső van
+    }
+
+    @DisplayName("Cso lecsatolasa sikertelen")
+    @Test
+    void testCsoLecsatolas2() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        cso.SzomszedHozzaad(c); // A cso szomszedaihoz hozzaadjuk a ciszternat
+        c.SzomszedHozzaad(cso); // A ciszterna szomszedaihoz hozzaadjuk a csot (kölcsönösen kell hozzaadni)
+        //A szerelőnek mondjuk tele van a hátizsákja és ezért nem fogja tudni lecsatolni a csövet
+        //Hat csövet adunk hozzá a hátizsákhoz (a hátizsák mérete 6)
+        for (int i = 0; i < 6; i++) {
+            szerelo.getCsoHatizsak().add(new Cso());
+        }
+        szerelo.CsovetLecsatol(cso); // A szerelo lecsatolja a csot a ciszternarol, de nem sikerul
+        assertEquals(1, cso.GetSzomszedok().size()); // A cso tovabbra is rendelkezik szomszedokkal, mert nem lett lecsatolva
+        assertEquals(1, c.GetSzomszedok().size()); // A ciszterna tovabbra is rendelkezik szomszedokkal, mert nem lett lecsatolva
+        assertEquals(6, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában 6 cső van, azok amiket korábban is tartalmazott
+        assertFalse(szerelo.getCsoHatizsak().contains(cso)); // A hátizsákban nincs a cső amit most akartunk lecsatolni
+    }
+
+    @DisplayName("Egesz cso lecsatolasa sikeres")
+    @Test
+    void testEgeszCsoLecsatolas() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        Ciszterna c2 = new Ciszterna();
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        cso.SzomszedHozzaad(c); // A cso szomszedaihoz hozzaadjuk a ciszternat
+        c.SzomszedHozzaad(cso); // A ciszterna szomszedaihoz hozzaadjuk a csot (kölcsönösen kell hozzaadni)
+        c2.SzomszedHozzaad(cso); // A masik ciszterna szomszedaihoz is hozzaadjuk a csot
+        cso.SzomszedHozzaad(c2); // A csot a masik ciszterna szomszedaihoz is hozzaadjuk
+        szerelo.EgeszCsovetLecsatol(cso); // A szerelo lecsatolja az egesz csot a ciszternarol
+        assertEquals(0, cso.GetSzomszedok().size()); // A cso nem rendelkezik szomszedokkal, mert le lett csatolva
+        assertEquals(0, c.GetSzomszedok().size()); // A ciszterna sem rendelkezik szomszedokkal, mert le lett csatolva
+        assertEquals(0, c2.GetSzomszedok().size()); // A masik ciszterna sem rendelkezik szomszedokkal, mert le lett csatolva
+        assertEquals(2, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában kétszer van a cső, mert az egesz csot lecsatolta, és ilyenkor mindkét végét a hátizsákba teszi
+        assertEquals(cso, szerelo.getCsoHatizsak().get(0)); // A hátizsákban a cső van
+    }
+
+    @DisplayName("Egesz cso lecsatolasa sikertelen")
+    @Test
+    void testEgeszCsoLecsatolas2() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        Ciszterna c2 = new Ciszterna();
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        cso.SzomszedHozzaad(c); // A cso szomszedaihoz hozzaadjuk a ciszternat
+        c.SzomszedHozzaad(cso); // A ciszterna szomszedaihoz hozzaadjuk a csot (kölcsönösen kell hozzaadni)
+        c2.SzomszedHozzaad(cso); // A masik ciszterna szomszedaihoz is hozzaadjuk a csot
+        cso.SzomszedHozzaad(c2); // A csot a masik ciszterna szomszedaihoz is hozzaadjuk
+        //A szerelőnek mondjuk tele van a hátizsákja és ezért nem fogja tudni lecsatolni a csövet
+        //Hat csövet adunk hozzá a hátizsákhoz (a hátizsák mérete 6)
+        for (int i = 0; i < 6; i++) {
+            szerelo.getCsoHatizsak().add(new Cso());
+        }
+        szerelo.EgeszCsovetLecsatol(cso); // A szerelo lecsatolja az egesz csot a ciszternarol, de nem sikerul
+        assertEquals(2, cso.GetSzomszedok().size()); // A cso tovabbra is rendelkezik szomszedokkal, mert nem lett lecsatolva
+        assertEquals(1, c.GetSzomszedok().size()); // A ciszterna tovabbra is rendelkezik szomszedokkal, mert nem lett lecsatolva
+        assertEquals(1, c2.GetSzomszedok().size()); // A masik ciszterna
+        assertEquals(6, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában 6 cső van, azok amiket korábban is tartalmazott
+    }
+
+    @DisplayName("Egesz cso lecsatolasa sikertelen mert nincs cso hozzácsatolva a ciszternához")
+    @Test
+    void testEgeszCsoLecsatolas3() {
+        Szerelo szerelo = new Szerelo();
+        Ciszterna c = new Ciszterna();
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        szerelo.EgeszCsovetLecsatol(c); // A szerelo lecsatolná az egesz csot a ciszternarol, de nem sikerul, mert nincs cső a ciszternához csatolva
+        assertEquals(0, c.GetSzomszedok().size()); // A ciszternának nincs szomszédja, nem is volt
+        assertEquals(0, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában nincs cső
+    }
+
+    @DisplayName("Cso felcsatolasa sikeres")
+    @Test
+    void testCsoFelcsatolas() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        //Szerelo hátizsákjában van a cső
+        szerelo.getCsoHatizsak().add(cso);
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        szerelo.CsovetFelcsatol(); // A szerelo felcsatolja a csot a ciszternara (a hátizsákból veszi ki a csovet, a legelsőt amit talál, de most csak egy van benne)
+        assertEquals(1, cso.GetSzomszedok().size()); // A cso rendelkezik szomszedokkal, mert fel lett csatolva
+        assertEquals(1, c.GetSzomszedok().size()); // A ciszterna rendelkezik szomszedokkal, mert fel lett csatolva
+        assertEquals(0, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában nincs a cső
+    }
+
+    @DisplayName("Cso felcsatolasa sikertelen mert nincs a hátizsákban cső")
+    @Test
+    void testCsoFelcsatolas2() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        //Szerelo hátizsákjában nincs a cső
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        szerelo.CsovetFelcsatol(); // A szerelo felcsatolja a csot a ciszternara, de nem sikerul
+        assertEquals(0, cso.GetSzomszedok().size()); // A cso nem rendelkezik szomszedokkal, mert nem lett felcsatolva
+        assertEquals(0, c.GetSzomszedok().size()); // A ciszterna sem rendelkezik szomszedokkal, mert nem lett felcsatolva
+        assertEquals(0, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában nincs cső, nem is volt
+    }
+
+    @DisplayName("Cso felcsatolasa sikertelen mert nem olyan mezon all a szerelo amihez csovet lehet csatolni")
+    @Test
+    void testCsoFelcsatolas3() {
+        Szerelo szerelo = new Szerelo();
+        Cso hatizsakCso = new Cso();
+        Cso raleposCso = new Cso();
+        //Szerelo hátizsákjában van a cső
+        szerelo.getCsoHatizsak().add(hatizsakCso);
+        //A szerelo ralep egy cso-re
+        szerelo.Lep(raleposCso);
+        szerelo.CsovetFelcsatol(); // A szerelo felcsatolja a csot a ciszternara, de nem sikerul, mert csőre nem lehet csövet csatolni
+        assertEquals(0, hatizsakCso.GetSzomszedok().size()); // A hatizsakCso nem rendelkezik szomszedokkal, mert nem lett felcsatolva
+        assertEquals(0, raleposCso.GetSzomszedok().size());  // A raleposCso sem rendelkezik szomszedokkal, mert nem lett felcsatolva
+        assertEquals(1, szerelo.getCsoHatizsak().size()); // A szerelo hátizsákjában van a cső
+        assertTrue(szerelo.getCsoHatizsak().contains(hatizsakCso)); // A hátizsákban még mindig a cső van
+    }
+
+    @DisplayName("Pumpa felvetele ciszternanal")
+    @Test
+    void testPumpaFelveteleCiszternanal() {
+        Szerelo szerelo = new Szerelo();
+        Ciszterna c = new Ciszterna();
+        c.PumpaKeszit(); // A ciszternanal pumpat keszitunk
+        //Szerelo hátizsákjában van a pumpa
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        szerelo.PumpatFelvesz(); // A szerelo felveszi a pumpat a ciszternarol (arról a mezőről veszi fel, amin áll, nem kell paraméter)
+        assertEquals(0, c.getTermeltPumpak().size()); // A ciszterna nem rendelkezik pumpakkal, mert fel lett véve
+        assertEquals(1, szerelo.getPumpaHatizsak().size()); // A szerelo hátizsákjában van a pumpa
+    }
+
+    @DisplayName("Pumpa felvetele ciszternanal sikertelen")
+    @Test
+    void testPumpaFelveteleCiszternanal2() {
+        Szerelo szerelo = new Szerelo();
+        Ciszterna c = new Ciszterna();
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        szerelo.PumpatFelvesz(); // A szerelo felvnné a pumpat a ciszternarol, de nem sikerul, mert nincs a ciszternan pumpa
+        assertEquals(0, c.getTermeltPumpak().size()); // A ciszterna rendelkezik pumpakkal, mert nem lett felvéve
+        assertEquals(0, szerelo.getPumpaHatizsak().size()); // A szerelo hátizsákjában nincs pumpa
+    }
+
+    @DisplayName("Pumpa felvetele ciszternanal sikertelen mert nincs a hátizsákban hely")
+    @Test
+    void testPumpaFelveteleCiszternanal3() {
+        Szerelo szerelo = new Szerelo();
+        Ciszterna c = new Ciszterna();
+        c.PumpaKeszit(); // A ciszternanal pumpat keszitunk
+        //Szerelo hátizsákjában nincs hely
+        for (int i = 0; i < 6; i++) {
+            szerelo.getPumpaHatizsak().add(new Pumpa());
+        }
+        szerelo.Lep(c); // A szerelo ralep a ciszternara
+        szerelo.PumpatFelvesz(); // A szerelo felvnné a pumpat a ciszternarol, de nem sikerul, mert nincs hely a hátizsákban
+        assertEquals(1, c.getTermeltPumpak().size()); // A ciszterna rendelkezik pumpakkal, mert nem lett felvéve
+        assertEquals(6, szerelo.getPumpaHatizsak().size()); // A szerelo hátizsákjában 6 pumpa van
+    }
+
+    @DisplayName("Pumpa epites")
+    @Test
+    void testPumpaEpites() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        c.SzomszedHozzaad(cso); // A ciszternanak van egy szomszedja, a cso (ez csak technikai okokbol kell)
+        cso.SzomszedHozzaad(c); // A cso szomszedaihoz hozzaadjuk a ciszternat
+        szerelo.getPumpaHatizsak().add(new Pumpa()); // A szerelo hátizsákjában van egy pumpa
+        szerelo.Lep(cso); // A szerelo ralep a ciszternara
+        szerelo.PumpatEpit(); // A szerelo epít egy pumpat a csohoz
+        assertEquals(1, cso.GetSzomszedok().size()); // A csonek csak egy szomszedja lesz, a pumpa
+        assertInstanceOf(Pumpa.class, cso.GetSzomszedok().get(0)); // A szomszed egy pumpa
+        assertEquals(0, szerelo.getPumpaHatizsak().size()); // A szerelo hátizsákjában nincs pumpa
+    }
+
+    @DisplayName("Pumpa epites sikertelen mert nincs a hátizsákban pumpa")
+    @Test
+    void testPumpaEpites2() {
+        Szerelo szerelo = new Szerelo();
+        Cso cso = new Cso();
+        Ciszterna c = new Ciszterna();
+        c.SzomszedHozzaad(cso); // A ciszternanak van egy szomszedja, a cso (ez csak technikai okokbol kell)
+        cso.SzomszedHozzaad(c); // A cso szomszedaihoz hozzaadjuk a ciszternat
+        //Szerelo hátizsákjában nincs pumpa
+        szerelo.Lep(cso); // A szerelo ralep a ciszternara
+        szerelo.PumpatEpit(); // A szerelo epít egy pumpat a csohoz, de nem sikerul, mert nincs a hátizsákban pumpa
+        assertEquals(1, cso.GetSzomszedok().size()); // A ciszterna nem rendelkezik szomszedokkal, mert nem lett felépítve mellé egy pumpa, csak a cso ami eddig is ott volt
+        assertEquals(0, szerelo.getPumpaHatizsak().size()); // A szerelo hátizsákjában nincs pumpa
+    }
+}
