@@ -144,8 +144,8 @@ public abstract class ObjectView {
 	 * @return View távolsága a ponttól
 	 */
 	public double getDistanceFromPoint(int px, int py) {
-		int dx = Math.abs(px - x);
-		int dy = Math.abs(py - y);
+		double dx = Math.abs(px - x);
+		double dy = Math.abs(py - y);
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
