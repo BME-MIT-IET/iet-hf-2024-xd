@@ -133,15 +133,26 @@ public class ParancsErtelmezo {
             filename += ".txt";
         }
         ArrayList<String> parancsok = new ArrayList<String>();
+        BufferedReader br = null;
         try {
             //Beolvassuk a fájlt soronként
-            BufferedReader br = new BufferedReader(new FileReader(filename));
+            br = new BufferedReader(new FileReader(filename));
             String line;
             while ((line = br.readLine()) != null) {
                 parancsok.add(line);
             }
         } catch (IOException ioe) {
             System.out.println("Hiba a fájl beolvasásakor! ("+ ioe + ")");
+        } finally {
+            // this block will be executed in every case, success or caught exception
+            if (br != null) {
+                // again, a resource is involved, so try-catch another time
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         parseAll(parancsok);
@@ -157,9 +168,9 @@ public class ParancsErtelmezo {
         try {
             System.out.print("Kérem a parancsot: ");
             String line;
+            br = new BufferedReader(new InputStreamReader(System.in));
             while ((line = br.readLine()) != null) {
                 //Egyetlen parancsot tartalmazó arraylist (mivel a parse függvény arraylistet vár)
-            	br = new BufferedReader(new InputStreamReader(System.in));
                 ArrayList<String> parancsok = new ArrayList<String>(List.of(line));
                 parseAll(parancsok);
 
@@ -1220,8 +1231,13 @@ public class ParancsErtelmezo {
         }
         //A tömb végén lévő érték lesz a távolság
         int l = dp.length;
-        int l0 = dp[0].length;
+        int l0; 
         
+        if(l > 0)
+            l0 = dp[0].length;
+        else
+            return 0;
+
         if(m >= 0 && m < l && n >= 0 && n < l0 )
         	return dp[m][n];
         else 
