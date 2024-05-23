@@ -80,7 +80,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
           <configuration>
-            <argLine>-Djava.awt.headless=true</argLine>
+            <argLine>-Djava.awt.headless=false</argLine>
           </configuration>
         </plugin>
         <plugin>
